@@ -1,17 +1,16 @@
 Care documentation
 ==================
 
-This is a sample paragraph
+Welcome to Care CMS documentaton. Care CMS is the php engine of [Care.gr](http://www.care.gr) web site.
 
-This another paragraph
+Care CMS is open source project available with [MIT license](http://opensource.org/licenses/MIT).
 
-- list-item1
-- list-item2
-- list-item3
+Copyright &copy; 1997-2013 [Christos Pontikis](http://www.pontikis.net) - [MediSign LTD](http://www.medisign.com)
 
-\link md_topic_retrieve  Clic here for topic_retrieve \endlink
+The following classes are documented:
 
-[The link text1](@ref md_topic_retrieve)
+- [data_source class](@ref data_source) [mysql](http://www.mysql.com/) and [memcached](http://php.net/manual/en/book.memcached.php) operations
+- [cms_common class](@ref cms_common) common operations
+- [topic_retrieve class](@ref topic_retrieve) topic operations
+- [category_retrieve class](@ref category_retrieve) category operations
 
-
-[The link text2](@ref topic_retrieve)
