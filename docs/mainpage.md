@@ -1,5 +1,5 @@
-Care documentation
-==================
+Care CMS documentation
+======================
 
 Welcome to Care CMS documentaton. Care CMS is the php engine of [Care.gr](http://www.care.gr) web site.
 
