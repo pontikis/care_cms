@@ -1,0 +1,10 @@
+<map id="push_to_memcached" name="push_to_memcached">
+<area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="659,44,803,85"/>
+<area shape="rect" id="node3" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="200,62,392,88"/>
+<area shape="rect" id="node6" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="464,174,587,216"/>
+<area shape="rect" id="node7" href="$d7/d90/classtopic__retrieve.html#ac3a1a65283a863c2388029d3cbc610cd" title="topic_retrieve\\get\l_topic_author" alt="" coords="235,164,357,205"/>
+<area shape="rect" id="node8" href="$d7/d90/classtopic__retrieve.html#ae81dfd2623c8daeae3ad44c9ea06a919" title="topic_retrieve\\get\l_topic_category" alt="" coords="235,229,357,270"/>
+<area shape="rect" id="node9" href="$d7/d90/classtopic__retrieve.html#a70bb98fe4b568393c3b6611d4dfe29ba" title="topic_retrieve\\get\l_topic_ctg_from_subctg" alt="" coords="215,294,377,336"/>
+<area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="447,44,603,85"/>
+<area shape="rect" id="node5" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="440,109,611,150"/>
+</map>

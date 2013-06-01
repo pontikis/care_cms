@@ -1,0 +1,6 @@
+<map id="get_topic_ctg_from_subctg" name="get_topic_ctg_from_subctg">
+<area shape="rect" id="node2" href="$d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445" title="data_source\\pull_from\l_memcached" alt="" coords="194,5,345,46"/>
+<area shape="rect" id="node4" href="$d5/d37/classdata__source.html#aa06d3588126ba2b8eaaeaa518304406d" title="data_source\\db_connect" alt="" coords="187,71,351,97"/>
+<area shape="rect" id="node5" href="$d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157" title="data_source\\push_to\l_memcached" alt="" coords="198,122,341,163"/>
+<area shape="rect" id="node3" href="$d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6" title="data_source\\mc_init" alt="" coords="400,71,539,97"/>
+</map>
