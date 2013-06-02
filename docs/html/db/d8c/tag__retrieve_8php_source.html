@@ -56,12 +56,12 @@
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno"><a class="code" href="../../df/d8a/classtag__retrieve.html#a77a7b1cc93bee4a698f38721eb6768bb">   14</a></span>&#160;    <span class="keyword">private</span> <a class="code" href="../../df/d8a/classtag__retrieve.html#a77a7b1cc93bee4a698f38721eb6768bb">$opt_show_popular_topics</a>;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="../../df/d8a/classtag__retrieve.html#a0d198a5b785da6e44e14a333edc14d8e">   25</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../df/d8a/classtag__retrieve.html#a0d198a5b785da6e44e14a333edc14d8e">__construct</a>($a_db, $tag_url, $offset, $rows_to_return, $max_popular) {</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="../../df/d8a/classtag__retrieve.html#af1bd05c5b814d5793f4d7503fd0c77c8">   25</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../df/d8a/classtag__retrieve.html#af1bd05c5b814d5793f4d7503fd0c77c8">__construct</a>($a_db, $tag_url, $offset, $max_topics_per_page, $max_popular) {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="comment">// initialize</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        $this-&gt;db_settings = $a_db;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        $this-&gt;tag_url = $tag_url;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        $this-&gt;offset = $offset;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        $this-&gt;rows_to_return = $rows_to_return;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        $this-&gt;max_topics_per_page = $max_topics_per_page;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        $this-&gt;max_popular = $max_popular;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        $this-&gt;<a class="code" href="../../df/d8a/classtag__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a> = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;</div>
@@ -83,7 +83,7 @@
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">// get category popular topics (always from database) ------------------</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        $tag[<span class="stringliteral">&quot;a_popular_topics&quot;</span>] = array();</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">if</span>($this-&gt;<a class="code" href="../../df/d8a/classtag__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a>) {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">if</span>($tag[<span class="stringliteral">&quot;total_topics&quot;</span>] &gt; $this-&gt;rows_to_return) {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">if</span>($tag[<span class="stringliteral">&quot;total_topics&quot;</span>] &gt; $this-&gt;max_topics_per_page) {</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                $tag[<span class="stringliteral">&quot;a_popular_topics&quot;</span>] = $this-&gt;<a class="code" href="../../df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f">get_tag_popular_topics</a>($this-&gt;tag);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            }</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        }</div>
@@ -108,7 +108,7 @@
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="stringliteral">&quot;order_by&quot;</span> =&gt; <span class="stringliteral">&quot;date_published&quot;</span>,</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="stringliteral">&quot;sort_order&quot;</span> =&gt; <span class="stringliteral">&quot;DESC&quot;</span>,</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="stringliteral">&quot;offset&quot;</span> =&gt; $this-&gt;offset,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; $this-&gt;rows_to_return,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; $this-&gt;max_topics_per_page,</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; null,</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="stringliteral">&quot;count_only&quot;</span> =&gt; <span class="keyword">true</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        );</div>
@@ -161,7 +161,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 2 2013 17:50:09 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jun 2 2013 22:29:30 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

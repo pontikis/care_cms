@@ -62,18 +62,18 @@
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#ac6c46270d03a8353e77492e067d53965">   23</a></span>&#160;    <span class="keyword">private</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#ac6c46270d03a8353e77492e067d53965">$data_origin</a>;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#a114314671d75046cdae221f42ac28e1c">   35</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#a114314671d75046cdae221f42ac28e1c">__construct</a>($a_db, $a_mc, $category_url, $offset, $rows_to_return, $max_popular) {</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#a694520b50dae46322e1e2ac7e0c3f074">   35</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#a694520b50dae46322e1e2ac7e0c3f074">__construct</a>($a_db, $a_mc, $category_url, $offset, $max_topics_per_page, $max_popular) {</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="comment">// initialize</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        $this-&gt;db_settings = $a_db;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        $this-&gt;mc_settings = $a_mc;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        $this-&gt;category_url = $category_url;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        $this-&gt;offset = $offset;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        $this-&gt;rows_to_return = $rows_to_return;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        $this-&gt;max_topics_per_page = $max_topics_per_page;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        $this-&gt;max_popular = $max_popular;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        $this-&gt;opt_use_memcached = $a_mc[<span class="stringliteral">&quot;use_memcached&quot;</span>];</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a> = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a5e3cd80e9905b2bf461b2b66d2790dd4">opt_show_relative_categories</a> = OPT_SHOW_RELATIVE_CATEGORIES;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        $this-&gt;opt_show_popular_topics = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        $this-&gt;opt_show_relative_categories = OPT_SHOW_RELATIVE_CATEGORIES;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        $this-&gt;data_origin = null;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
@@ -81,12 +81,12 @@
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        $this-&gt;opt_use_memcached = $flag;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#a5e3cd80e9905b2bf461b2b66d2790dd4">   64</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#a5e3cd80e9905b2bf461b2b66d2790dd4">opt_show_relative_categories</a>($flag) {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a5e3cd80e9905b2bf461b2b66d2790dd4">opt_show_relative_categories</a> = $flag;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#adcf7b367f0ec9be366142d45733f192b">   64</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#adcf7b367f0ec9be366142d45733f192b">set_opt_show_relative_categories</a>($flag) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        $this-&gt;opt_show_relative_categories = $flag;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">   73</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a>($flag) {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a> = $flag;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#a3fbcb16310bab049087b716c65145595">   73</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#a3fbcb16310bab049087b716c65145595">set_opt_show_popular_topics</a>($flag) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        $this-&gt;opt_show_popular_topics = $flag;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
 <div class="line"><a name="l00082"></a><span class="lineno"><a class="code" href="../../d9/d11/classcategory__retrieve.html#a80825f308c12cbd33d55a1ae571bca1c">   82</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d9/d11/classcategory__retrieve.html#a80825f308c12cbd33d55a1ae571bca1c">get_data_origin</a>() {</div>
@@ -113,7 +113,7 @@
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                <span class="comment">// get category popular topics (always from database)</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                $category_cached[<span class="stringliteral">&quot;a_popular_topics&quot;</span>] = array();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <span class="keywordflow">if</span>($this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a>) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <span class="keywordflow">if</span>($this-&gt;opt_show_popular_topics) {</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    $category_cached[<span class="stringliteral">&quot;a_popular_topics&quot;</span>] = $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4">get_category_popular_topics</a>($category_cached);</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                }</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
@@ -128,7 +128,7 @@
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        }</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="comment">// get relative categories ---------------------------------------------</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">if</span>($this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a5e3cd80e9905b2bf461b2b66d2790dd4">opt_show_relative_categories</a>) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_show_relative_categories) {</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            $category[<span class="stringliteral">&quot;a_rel_categories&quot;</span>] = $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#ae92553a4732e93308cd612f29fb4aaf8">get_relative_categories</a>($category);</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        }</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
@@ -159,7 +159,7 @@
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        <span class="comment">// get category popular topics (always from database) ------------------</span></div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        $category[<span class="stringliteral">&quot;a_popular_topics&quot;</span>] = array();</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">if</span>($this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8">opt_show_popular_topics</a>) {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_show_popular_topics) {</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            $category[<span class="stringliteral">&quot;a_popular_topics&quot;</span>] = $this-&gt;<a class="code" href="../../d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4">get_category_popular_topics</a>($category);</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        }</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
@@ -269,7 +269,7 @@
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            <span class="stringliteral">&quot;order_by&quot;</span> =&gt; <span class="stringliteral">&quot;date_published&quot;</span>,</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <span class="stringliteral">&quot;sort_order&quot;</span> =&gt; <span class="stringliteral">&quot;DESC&quot;</span>,</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            <span class="stringliteral">&quot;offset&quot;</span> =&gt; $this-&gt;offset,</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; OPT_MAX_TOPICS_PER_PAGE,</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; $this-&gt;max_topics_per_page,</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; null,</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;            <span class="stringliteral">&quot;count_only&quot;</span> =&gt; <span class="keyword">true</span></div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        );</div>
@@ -440,7 +440,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 2 2013 17:50:09 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jun 2 2013 22:29:30 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

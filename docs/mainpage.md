@@ -11,13 +11,14 @@ Copyright &copy; 1997-2013 [Christos Pontikis](http://www.pontikis.net) - [MediS
 
 The following classes are documented:
 
-- [data_source class](@ref data_source) ([mysql](http://www.mysql.com/) and [memcached](http://php.net/manual/en/book.memcached.php) operations)
 - [app_common class](@ref app_common) (common operations)
+- [data_source class](@ref data_source) ([mysql](http://www.mysql.com/) and [memcached](http://php.net/manual/en/book.memcached.php) operations)
 - [cms_common class](@ref cms_common) (common cms operations)
 - [topic_retrieve class](@ref topic_retrieve) (topic operations)
 - [category_retrieve class](@ref category_retrieve) (category operations)
 - [tag_retrieve class](@ref tag_retrieve) (tag operations)
+- [member_retrieve class](@ref member_retrieve) (member operations)
 
-There are some functions used outside classes:
+There are (still) some functions used outside classes (will be deprecated soon):
 
 - [various utility functions](@ref utils.php)

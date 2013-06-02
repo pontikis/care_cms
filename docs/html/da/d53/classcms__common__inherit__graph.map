@@ -1,7 +1,9 @@
 <map id="cms_common" name="cms_common">
 <area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html" title="category_retrieve" alt="" coords="5,229,128,256"/>
-<area shape="rect" id="node5" href="$df/d8a/classtag__retrieve.html" title="tag_retrieve" alt="" coords="152,229,243,256"/>
-<area shape="rect" id="node6" href="$d7/d90/classtopic__retrieve.html" title="topic_retrieve" alt="" coords="267,229,367,256"/>
-<area shape="rect" id="node2" href="$dc/d42/classapp__common.html" title="app_common" alt="" coords="147,80,247,107"/>
-<area shape="rect" id="node3" href="$d5/d37/classdata__source.html" title="data_source" alt="" coords="151,5,244,32"/>
+<area shape="rect" id="node5" href="$d1/db6/classmember__retrieve.html" title="member_retrieve" alt="" coords="153,229,271,256"/>
+<area shape="rect" id="node6" href="$df/d8a/classtag__retrieve.html" title="tag_retrieve" alt="" coords="296,229,387,256"/>
+<area shape="rect" id="node7" href="$d9/dea/classtopic__manage.html" title="topic_manage" alt="" coords="411,229,513,256"/>
+<area shape="rect" id="node8" href="$d7/d90/classtopic__retrieve.html" title="topic_retrieve" alt="" coords="538,229,637,256"/>
+<area shape="rect" id="node2" href="$d5/d37/classdata__source.html" title="data_source" alt="" coords="295,80,388,107"/>
+<area shape="rect" id="node3" href="$dc/d42/classapp__common.html" title="app_common" alt="" coords="291,5,391,32"/>
 </map>
