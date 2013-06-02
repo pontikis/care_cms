@@ -5,6 +5,8 @@ Welcome to Care CMS documentaton. Care CMS is the php engine of [Care.gr](http:/
 
 Care CMS is open source project released under [MIT license](http://opensource.org/licenses/MIT).
 
+Project page [https://github.com/pontikis/care_cms](https://github.com/pontikis/care_cms)
+
 Copyright &copy; 1997-2013 [Christos Pontikis](http://www.pontikis.net) - [MediSign LTD](http://www.medisign.com)
 
 The following classes are documented:
