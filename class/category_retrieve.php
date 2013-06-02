@@ -28,16 +28,18 @@ class category_retrieve extends cms_common {
 	 * @param array $a_db database settings
 	 * @param array $a_mc memcached settings
 	 * @param string $category_url category url
-	 * @param $offset
-	 * @param $rows_to_return
+	 * @param int $offset offset to start topics display
+	 * @param int $rows_to_return max topics per page
+	 * @param int $max_popular max popular topics to display
 	 */
-	public function __construct($a_db, $a_mc, $category_url, $offset, $rows_to_return) {
+	public function __construct($a_db, $a_mc, $category_url, $offset, $rows_to_return, $max_popular) {
 		// initialize
 		$this->db_settings = $a_db;
 		$this->mc_settings = $a_mc;
 		$this->category_url = $category_url;
 		$this->offset = $offset;
 		$this->rows_to_return = $rows_to_return;
+		$this->max_popular = $max_popular;
 
 		$this->opt_use_memcached = $a_mc["use_memcached"];
 		$this->opt_show_popular_topics = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;
@@ -139,7 +141,7 @@ class category_retrieve extends cms_common {
 
 		// push to memcached ---------------------------------------------------
 		if($this->opt_use_memcached) {
-			$category["date_cached"] = now("UTC");
+			$category["date_cached"] = $this->now('UTC');
 			$this->push_to_memcached($this->mc_settings, $category_key, $category);
 		}
 
@@ -281,7 +283,7 @@ class category_retrieve extends cms_common {
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
 			"rows_to_return" => OPT_MAX_TOPICS_PER_PAGE,
-			"memcached_key" => false,
+			"memcached_key" => null,
 			"count_only" => true
 		);
 		$total_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics);
@@ -399,7 +401,7 @@ class category_retrieve extends cms_common {
 
 		$a_category_popular_topics = array(
 			"extra_columns_topics" => array("impressions"),
-			"extra_columns_content" => array(),
+			"extra_columns_content" => null,
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
 			"date_from" => null,
 			"date_until" => null,
@@ -412,8 +414,8 @@ class category_retrieve extends cms_common {
 			"order_by" => "impressions",
 			"sort_order" => "DESC",
 			"offset" => 0,
-			"rows_to_return" => 10,
-			"memcached_key" => false,
+			"rows_to_return" => $this->max_popular,
+			"memcached_key" => null,
 			"count_only" => false
 		);
 

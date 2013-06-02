@@ -1,6 +1,6 @@
 <?php
 /**
- * cms_common php class (Common CMS operations)
+ * cms_common php class (common CMS operations)
  *
  * @author     Christos Pontikis http://pontikis.net
  * @copyright  Christos Pontikis
@@ -8,7 +8,7 @@
  * @version    0.1.0 (26 May 2013)
  *
  */
-class cms_common extends data_source {
+class cms_common extends app_common {
 
 	/**
 	 * Constructor
@@ -20,49 +20,53 @@ class cms_common extends data_source {
 	/**
 	 * Create a topics array (or just count results) using criteria
 	 *
-	 * @param $a_db
-	 * @param $a_mc
+	 * @param array $a_db database connection settings
+	 * @param array|null $a_mc memcached settings
 	 * @param array $a_criteria
 	 *
-	 *        <pre>
-	 *        $a_criteria = array(
-	 *            "extra_columns_topics" => array("col1", "col2"), (or null)
-	 *            "extra_columns_content" => array("col1", "col2"), (or null)
-	 *            "publish_status" => int,
-	 *            "date_from" => "date", (UTC date with format YYYYMMDDHHMMSS or null)
-	 *            "date_until" => "date", (UTC date with format YYYYMMDDHHMMSS or null)
-	 *            "with_content_type" => int, (ctg_id or null)
-	 *            "with_topic_type" => int, (ctg_id or null)
-	 *            "with_topic_type_in" => string, (string of IDs or null)
-	 *            "topic_type_column" => "topic_type_id", (topic_type_id/topic_top_type_id)
-	 *            "with_tag" => "tag_name", (or null)
-	 *            "by_author" => int,  author_is or null
-	 *            "order_by" => "order_column", (date_published/impressions or null)
-	 *            "sort_order" => "DESC", (ASC/DESC or null)
-	 *            "offset" => int, (0 or an integer)
-	 *            "rows_to_return" => 10, (0 or a possitive integer)
-	 *            "memcached_key" => "key" (or false)
-	 *            "count_only" => bool (false/true)
-	 *        );
-	 *        </pre>
-	 *
+	 * <pre>
+	 * $a_criteria = array(
+	 *     "extra_columns_topics" => array("col1", "col2"), (or null)
+	 *     "extra_columns_content" => array("col1", "col2"), (or null)
+	 *     "publish_status" => int,
+	 *     "date_from" => "date", (UTC date with format YYYYMMDDHHMMSS or null)
+	 *     "date_until" => "date", (UTC date with format YYYYMMDDHHMMSS or null)
+	 *     "with_content_type" => int, (ctg_id or null)
+	 *     "with_topic_type" => int, (ctg_id or null)
+	 *     "with_topic_type_in" => string, (string of IDs or null)
+	 *     "topic_type_column" => "topic_type_id", (topic_type_id/topic_top_type_id or null)
+	 *     "with_tag" => "tag_name", (or null)
+	 *     "by_author" => int,  author_is or null
+	 *     "order_by" => "order_column", (date_published/impressions or null)
+	 *     "sort_order" => "DESC", (ASC/DESC or null)
+	 *     "offset" => int, (0 or an integer)
+	 *     "rows_to_return" => int, (0 or a possitive integer)
+	 *     "memcached_key" => "key" (or null)
+	 *     "count_only" => bool (false/true)
+	 * );
+	 * </pre>
 	 *
 	 * @return array|int (topics array or topics count)
 	 */
 	public function get_topics_list($a_db, $a_mc, $a_criteria) {
 
 		// pull from memcached
-		if(!is_null($a_mc)) {
-			if($a_criteria["memcached_key"]) {
-				$a_topics_cached = $this->pull_from_memcached($this->mc_settings, $a_criteria["memcached_key"]);
-				if($a_topics_cached) {
-					return $a_topics_cached;
-				}
+		if(!is_null($a_mc) && !is_null($a_criteria["memcached_key"])) {
+			$a_topics_cached = $this->pull_from_memcached($this->mc_settings, $a_criteria["memcached_key"]);
+			if($a_topics_cached) {
+				return $a_topics_cached;
 			}
 		}
 
 		// retrieve from database
 		$conn = $this->db_connect($a_db);
+
+		if(is_null($a_criteria["extra_columns_topics"])) {
+			$a_criteria["extra_columns_topics"] = array();
+		}
+		if(is_null($a_criteria["extra_columns_content"])) {
+			$a_criteria["extra_columns_content"] = array();
+		}
 
 		if($a_criteria["count_only"]) {
 			$selectSQL = 'SELECT count(id) as topics_count FROM topics ';
@@ -93,7 +97,7 @@ class cms_common extends data_source {
 
 		$whereSQL = 'WHERE publish_status_id=' . TOPIC_STATUS_PUBLISHED . ' AND date_published IS NOT null ' .
 			'AND publish_status_id=' . $a_criteria["publish_status"] . ' ' .
-			'AND date_published <= ' . "'" . (is_null($a_criteria["date_until"]) ? now('UTC') : $a_criteria["date_until"]) . "' " .
+			'AND date_published <= ' . "'" . (is_null($a_criteria["date_until"]) ? $this->now('UTC') : $a_criteria["date_until"]) . "' " .
 			(is_null($a_criteria["date_from"]) ? '' : 'AND date_published >= ' . "'" . $a_criteria["date_from"] . "' ") .
 			(is_null($a_criteria["with_content_type"]) ? '' : 'AND content_type_id=' . $a_criteria["with_content_type"] . ' ') .
 			(is_null($a_criteria["with_topic_type"]) ? '' : 'AND ' . $a_criteria["topic_type_column"] . '=' . $a_criteria["with_topic_type"] . ' ') .
@@ -141,10 +145,8 @@ class cms_common extends data_source {
 		$rs->free();
 
 		// push to memcached
-		if(!is_null($a_mc)) {
-			if($a_criteria["memcached_key"]) {
-				$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
-			}
+		if(!is_null($a_mc) && !is_null($a_criteria["memcached_key"])) {
+			$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
 		}
 
 		if($a_criteria["count_only"]) {

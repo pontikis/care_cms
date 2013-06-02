@@ -90,7 +90,7 @@ class tag_retrieve extends cms_common {
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
 			"rows_to_return" => $this->rows_to_return,
-			"memcached_key" => false,
+			"memcached_key" => null,
 			"count_only" => true
 		);
 		$total_topics = $this->get_topics_list($this->db_settings, null, $a_page_topics_with_tag);
@@ -114,7 +114,7 @@ class tag_retrieve extends cms_common {
 
 		$a_popular_topics_with_tag = array(
 			"extra_columns_topics" => array("impressions"),
-			"extra_columns_content" => array(),
+			"extra_columns_content" => null,
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
 			"date_from" => null,
 			"date_until" => null,
@@ -127,8 +127,8 @@ class tag_retrieve extends cms_common {
 			"order_by" => "impressions",
 			"sort_order" => "DESC",
 			"offset" => 0,
-			"rows_to_return" => 10,
-			"memcached_key" => false,
+			"rows_to_return" => $this->max_popular,
+			"memcached_key" => null,
 			"count_only" => false
 		);
 

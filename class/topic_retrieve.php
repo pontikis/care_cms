@@ -25,12 +25,15 @@ class topic_retrieve extends cms_common {
 	 * @param array $a_db database settings
 	 * @param array $a_mc memcached settings
 	 * @param int $topic_id topic id
+	 * @param int $max_recent_topics max recent topics to display
 	 */
-	public function __construct($a_db, $a_mc, $topic_id) {
+	public function __construct($a_db, $a_mc, $topic_id, $max_recent_topics) {
 		// initialize
 		$this->db_settings = $a_db;
 		$this->mc_settings = $a_mc;
 		$this->topic_id = $topic_id;
+		$this->max_recent_topics = $max_recent_topics;
+
 		$this->opt_use_memcached = $a_mc["use_memcached"];
 		$this->opt_increase_impressions = OPT_LOG_TOPIC_IMPRESSIONS;
 		$this->data_origin = null;
@@ -73,20 +76,21 @@ class topic_retrieve extends cms_common {
 		$topic_id = $this->topic_id;
 		$topic_key = 'care_topic_' . $topic_id;
 		$a_recent_topics = array(
-			"extra_columns_topics" => array(),
-			"extra_columns_content" => array(),
+			"extra_columns_topics" => null,
+			"extra_columns_content" => null,
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
 			"date_from" => null,
 			"date_until" => null,
 			"with_content_type" => null,
 			"with_topic_type" => null,
+			"with_topic_type_in" => null,
 			"topic_type_column" => null,
 			"with_tag" => null,
 			"by_author" => null,
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => 0,
-			"rows_to_return" => 10,
+			"rows_to_return" => $this->max_recent_topics,
 			"memcached_key" => "care_recent_topics",
 			"count_only" => false
 		);
@@ -154,7 +158,7 @@ class topic_retrieve extends cms_common {
 
 		// push to memcached
 		if($this->opt_use_memcached) {
-			$topic["date_cached"] = now("UTC");
+			$topic["date_cached"] = $this->now('UTC');
 			$this->push_to_memcached($this->mc_settings, $topic_key, $topic);
 		}
 
@@ -176,7 +180,7 @@ class topic_retrieve extends cms_common {
 			'WHERE t.id=' . $this->topic_id . ' ' .
 			'AND publish_status_id=' . TOPIC_STATUS_PUBLISHED . ' ' .
 			'AND date_published IS NOT null ' .
-			'AND date_published <= ' . "'" . now('UTC') . "'";
+			'AND date_published <= ' . "'" . $this->now('UTC') . "'";
 		$res_topic = $conn->query($sql);
 		if($res_topic === false) {
 			echo 'Wrong SQL...' . '<br>' .
