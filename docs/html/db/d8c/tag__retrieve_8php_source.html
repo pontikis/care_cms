@@ -109,7 +109,7 @@
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="stringliteral">&quot;sort_order&quot;</span> =&gt; <span class="stringliteral">&quot;DESC&quot;</span>,</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="stringliteral">&quot;offset&quot;</span> =&gt; $this-&gt;offset,</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; $this-&gt;rows_to_return,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; null,</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="stringliteral">&quot;count_only&quot;</span> =&gt; <span class="keyword">true</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        );</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        $total_topics = $this-&gt;<a class="code" href="../../d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891">get_topics_list</a>($this-&gt;db_settings, null, $a_page_topics_with_tag);</div>
@@ -128,7 +128,7 @@
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        $a_popular_topics_with_tag = array(</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="stringliteral">&quot;extra_columns_topics&quot;</span> =&gt; array(<span class="stringliteral">&quot;impressions&quot;</span>),</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="stringliteral">&quot;extra_columns_content&quot;</span> =&gt; array(),</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="stringliteral">&quot;extra_columns_content&quot;</span> =&gt; null,</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <span class="stringliteral">&quot;publish_status&quot;</span> =&gt; TOPIC_STATUS_PUBLISHED,</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="stringliteral">&quot;date_from&quot;</span> =&gt; null,</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="stringliteral">&quot;date_until&quot;</span> =&gt; null,</div>
@@ -141,8 +141,8 @@
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            <span class="stringliteral">&quot;order_by&quot;</span> =&gt; <span class="stringliteral">&quot;impressions&quot;</span>,</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <span class="stringliteral">&quot;sort_order&quot;</span> =&gt; <span class="stringliteral">&quot;DESC&quot;</span>,</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="stringliteral">&quot;offset&quot;</span> =&gt; 0,</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; 10,</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; $this-&gt;max_popular,</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; null,</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="stringliteral">&quot;count_only&quot;</span> =&gt; <span class="keyword">false</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        );</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
@@ -161,7 +161,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 2 2013 14:04:26 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jun 2 2013 17:50:09 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>
