@@ -38,6 +38,7 @@
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <div id="nav-path" class="navpath">
@@ -167,7 +168,7 @@
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        <span class="comment">// push to memcached</span></div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            $topic[<span class="stringliteral">&quot;date_cached&quot;</span>] = now(<span class="stringliteral">&quot;UTC&quot;</span>);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            $topic[<span class="stringliteral">&quot;date_cached&quot;</span>] = <a class="code" href="../../d8/dfd/utils_8php.html#af4a2ee0fcc1938603a0df8cb02e51fbd">now</a>(<span class="stringliteral">&quot;UTC&quot;</span>);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($this-&gt;mc_settings, $topic_key, $topic);</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        }</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
@@ -184,7 +185,7 @@
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="stringliteral">&#39;WHERE t.id=&#39;</span> . $this-&gt;topic_id . <span class="charliteral">&#39; &#39;</span> .</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            <span class="stringliteral">&#39;AND publish_status_id=&#39;</span> . TOPIC_STATUS_PUBLISHED . <span class="charliteral">&#39; &#39;</span> .</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="stringliteral">&#39;AND date_published IS NOT null &#39;</span> .</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="stringliteral">&#39;AND date_published &lt;= &#39;</span> . <span class="stringliteral">&quot;&#39;&quot;</span> . now(<span class="stringliteral">&#39;UTC&#39;</span>) . <span class="stringliteral">&quot;&#39;&quot;</span>;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="stringliteral">&#39;AND date_published &lt;= &#39;</span> . <span class="stringliteral">&quot;&#39;&quot;</span> . <a class="code" href="../../d8/dfd/utils_8php.html#af4a2ee0fcc1938603a0df8cb02e51fbd">now</a>(<span class="stringliteral">&#39;UTC&#39;</span>) . <span class="stringliteral">&quot;&#39;&quot;</span>;</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        $res_topic = <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;query($sql);</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="keywordflow">if</span>($res_topic === <span class="keyword">false</span>) {</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            echo <span class="stringliteral">&#39;Wrong SQL...&#39;</span> . <span class="stringliteral">&#39;&lt;br&gt;&#39;</span> .</div>
@@ -264,7 +265,7 @@
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;            $res_ctg-&gt;data_seek(0);</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            $cat = $res_ctg-&gt;fetch_array(MYSQLI_ASSOC);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            $topic_category_title = mb_strtoupper(removeAccents($cat[<span class="stringliteral">&#39;category&#39;</span>]));</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            $topic_category_title = mb_strtoupper(<a class="code" href="../../d8/dfd/utils_8php.html#a3cdfd9f7d63c5ea6dcb7508a7884ef84">removeAccents</a>($cat[<span class="stringliteral">&#39;category&#39;</span>]));</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            $topic_category = array(<span class="stringliteral">&quot;id&quot;</span> =&gt; $cat_id, <span class="stringliteral">&quot;url&quot;</span> =&gt; $cat[<span class="stringliteral">&#39;url&#39;</span>], <span class="stringliteral">&quot;title&quot;</span> =&gt; $topic_category_title);</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            $res_ctg-&gt;free();</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        }</div>
@@ -307,7 +308,7 @@
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            }</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            $current_cat_id = $cat[<span class="stringliteral">&#39;parent_b_id&#39;</span>];</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;            $topic_category_url = $cat[<span class="stringliteral">&#39;url&#39;</span>];</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;            $topic_category_title = mb_strtoupper(removeAccents($cat[<span class="stringliteral">&#39;category&#39;</span>]));</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;            $topic_category_title = mb_strtoupper(<a class="code" href="../../d8/dfd/utils_8php.html#a3cdfd9f7d63c5ea6dcb7508a7884ef84">removeAccents</a>($cat[<span class="stringliteral">&#39;category&#39;</span>]));</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            $topic_category = array(<span class="stringliteral">&quot;id&quot;</span> =&gt; $cat_id, <span class="stringliteral">&quot;url&quot;</span> =&gt; $topic_category_url, <span class="stringliteral">&quot;title&quot;</span> =&gt; $topic_category_title);</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        };</div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        $res_ctg-&gt;free();</div>
@@ -343,7 +344,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 1 2013 19:20:41 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jun 2 2013 13:57:34 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

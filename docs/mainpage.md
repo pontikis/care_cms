@@ -13,4 +13,8 @@ The following classes are documented:
 - [cms_common class](@ref cms_common) common operations
 - [topic_retrieve class](@ref topic_retrieve) topic operations
 - [category_retrieve class](@ref category_retrieve) category operations
+- [tag_retrieve class](@ref tag_retrieve) tag operations
 
+There are some functions used outside classes:
+
+- [various utility functions](@ref utils.php)

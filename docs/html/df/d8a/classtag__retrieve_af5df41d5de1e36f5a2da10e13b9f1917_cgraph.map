@@ -1,0 +1,11 @@
+<map id="get_tag" name="get_tag">
+<area shape="rect" id="node2" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="get_tag_page_topics" alt="" coords="134,45,277,72"/>
+<area shape="rect" id="node9" href="$df/d8a/classtag__retrieve.html#a9caf468058d0d5d5d3fac0cae1a916a8" title="opt_show_popular_topics" alt="" coords="121,96,290,123"/>
+<area shape="rect" id="node10" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="get_tag_popular_topics" alt="" coords="127,147,283,173"/>
+<area shape="rect" id="node3" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="339,96,531,123"/>
+<area shape="rect" id="node4" href="$d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445" title="data_source\\pull_from\l_memcached" alt="" coords="586,5,737,46"/>
+<area shape="rect" id="node6" href="$d5/d37/classdata__source.html#aa06d3588126ba2b8eaaeaa518304406d" title="data_source\\db_connect" alt="" coords="579,71,743,97"/>
+<area shape="rect" id="node7" href="$d8/dfd/utils_8php.html#af4a2ee0fcc1938603a0df8cb02e51fbd" title="now" alt="" coords="638,121,685,148"/>
+<area shape="rect" id="node8" href="$d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157" title="data_source\\push_to\l_memcached" alt="" coords="590,173,733,214"/>
+<area shape="rect" id="node5" href="$d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6" title="data_source\\mc_init" alt="" coords="792,96,931,123"/>
+</map>

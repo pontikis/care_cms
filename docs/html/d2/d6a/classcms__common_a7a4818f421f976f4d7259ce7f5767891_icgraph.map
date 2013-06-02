@@ -1,6 +1,9 @@
 <map id="get_topics_list" name="get_topics_list">
 <area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="167,5,323,46"/>
 <area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="160,70,331,111"/>
-<area shape="rect" id="node5" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="184,135,307,177"/>
+<area shape="rect" id="node5" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="177,135,314,177"/>
+<area shape="rect" id="node7" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="177,201,314,242"/>
+<area shape="rect" id="node8" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="184,266,307,307"/>
 <area shape="rect" id="node3" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="379,38,523,79"/>
+<area shape="rect" id="node6" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="382,175,519,201"/>
 </map>
