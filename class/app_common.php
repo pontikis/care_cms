@@ -8,7 +8,7 @@
  * @version    0.1.0 (02 Jun 2013)
  *
  */
-class app_common extends data_source {
+class app_common {
 
 	/**
 	 * Constructor

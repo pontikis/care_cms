@@ -19,15 +19,15 @@ class tag_retrieve extends cms_common {
 	 * @param array $a_db database settings
 	 * @param string $tag_url the tag url
 	 * @param int $offset offset to start topics display
-	 * @param int $rows_to_return topics per page
+	 * @param int $max_topics_per_page max topics per page
 	 * @param int $max_popular max popular topics with tag
 	 */
-	public function __construct($a_db, $tag_url, $offset, $rows_to_return, $max_popular) {
+	public function __construct($a_db, $tag_url, $offset, $max_topics_per_page, $max_popular) {
 		// initialize
 		$this->db_settings = $a_db;
 		$this->tag_url = $tag_url;
 		$this->offset = $offset;
-		$this->rows_to_return = $rows_to_return;
+		$this->max_topics_per_page = $max_topics_per_page;
 		$this->max_popular = $max_popular;
 
 		$this->opt_show_popular_topics = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;
@@ -59,7 +59,7 @@ class tag_retrieve extends cms_common {
 		// get category popular topics (always from database) ------------------
 		$tag["a_popular_topics"] = array();
 		if($this->opt_show_popular_topics) {
-			if($tag["total_topics"] > $this->rows_to_return) {
+			if($tag["total_topics"] > $this->max_topics_per_page) {
 				$tag["a_popular_topics"] = $this->get_tag_popular_topics($this->tag);
 			}
 		}
@@ -89,7 +89,7 @@ class tag_retrieve extends cms_common {
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
-			"rows_to_return" => $this->rows_to_return,
+			"rows_to_return" => $this->max_topics_per_page,
 			"memcached_key" => null,
 			"count_only" => true
 		);

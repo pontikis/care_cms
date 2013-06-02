@@ -8,7 +8,7 @@
  * @version    0.1.0 (26 May 2013)
  *
  */
-class cms_common extends app_common {
+class cms_common extends data_source {
 
 	/**
 	 * Constructor

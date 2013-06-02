@@ -29,16 +29,16 @@ class category_retrieve extends cms_common {
 	 * @param array $a_mc memcached settings
 	 * @param string $category_url category url
 	 * @param int $offset offset to start topics display
-	 * @param int $rows_to_return max topics per page
+	 * @param int $max_topics_per_page max topics per page
 	 * @param int $max_popular max popular topics to display
 	 */
-	public function __construct($a_db, $a_mc, $category_url, $offset, $rows_to_return, $max_popular) {
+	public function __construct($a_db, $a_mc, $category_url, $offset, $max_topics_per_page, $max_popular) {
 		// initialize
 		$this->db_settings = $a_db;
 		$this->mc_settings = $a_mc;
 		$this->category_url = $category_url;
 		$this->offset = $offset;
-		$this->rows_to_return = $rows_to_return;
+		$this->max_topics_per_page = $max_topics_per_page;
 		$this->max_popular = $max_popular;
 
 		$this->opt_use_memcached = $a_mc["use_memcached"];
@@ -61,7 +61,7 @@ class category_retrieve extends cms_common {
 	 *
 	 * @param bool $flag opt_show_relative_categories
 	 */
-	public function opt_show_relative_categories($flag) {
+	public function set_opt_show_relative_categories($flag) {
 		$this->opt_show_relative_categories = $flag;
 	}
 
@@ -70,7 +70,7 @@ class category_retrieve extends cms_common {
 	 *
 	 * @param bool $flag opt_show_popular_topics
 	 */
-	public function opt_show_popular_topics($flag) {
+	public function set_opt_show_popular_topics($flag) {
 		$this->opt_show_popular_topics = $flag;
 	}
 
@@ -282,7 +282,7 @@ class category_retrieve extends cms_common {
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
-			"rows_to_return" => OPT_MAX_TOPICS_PER_PAGE,
+			"rows_to_return" => $this->max_topics_per_page,
 			"memcached_key" => null,
 			"count_only" => true
 		);

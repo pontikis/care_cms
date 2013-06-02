@@ -10,7 +10,7 @@
  * @version    0.1.0 (26 May 2013)
  *
  */
-class data_source {
+class data_source extends app_common {
 
 	/** @var object Database connection */
 	private $conn;
