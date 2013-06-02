@@ -249,28 +249,6 @@ function isValidDateTimeString($str_dt, $str_dateformat, $str_timezone) {
 	return ($date === false ? false : true);
 }
 
-/**
- * Check for valid URL
- *
- * preg_match \w (unicode word characters) does not work with php < 5.3.10
- *
- * @param $url
- * @param $str_regex
- * @param $str_regex_php_legacy
- * @return bool
- *
- * @link http://stackoverflow.com/questions/8915713/php5-3-preg-match-with-umlaute-utf-8-modifier
- */
-function valid_url($url, $str_regex, $str_regex_php_legacy) {
-	$res = true;
-	if(version_compare(phpversion(), '5.3.10', 'ge')) {
-		$res = preg_match($str_regex, $url) ? false : true;
-	} else {
-		$res = preg_match($str_regex_php_legacy, $url) ? false : true;
-	}
-	return $res;
-}
-
 // -----------------------------------------------------------------------------
 
 /**
@@ -507,24 +485,6 @@ function wpautop($pee, $br = true) {
  */
 function _autop_newline_preservation_helper($matches) {
 	return str_replace("\n", "<WPPreserveNewline />", $matches[0]);
-}
-
-/**
- * http://snipplr.com/view/12673/  (see below)
- *
- * @param $text
- * @return string
- */
-function linkify_deprecated($text) {
-	$text = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
-		'<a href="\\1" target="_blank">\\1</a>', $text);
-
-	$text = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
-		'\\1<a href="http://\\2" target="_blank">\\2</a>', $text);
-
-	$text = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
-		'<a href="mailto:\\1">\\1</a>', $text);
-	return $text;
 }
 
 /**
