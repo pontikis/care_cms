@@ -52,10 +52,12 @@ class cms_common extends data_source {
 	public function get_topics_list($a_db, $a_mc, $a_criteria) {
 
 		// pull from memcached
-		if($a_criteria["memcached_key"]) {
-			$a_topics_cached = $this->pull_from_memcached($this->mc_settings, $a_criteria["memcached_key"]);
-			if($a_topics_cached) {
-				return $a_topics_cached;
+		if(!is_null($a_mc)) {
+			if($a_criteria["memcached_key"]) {
+				$a_topics_cached = $this->pull_from_memcached($this->mc_settings, $a_criteria["memcached_key"]);
+				if($a_topics_cached) {
+					return $a_topics_cached;
+				}
 			}
 		}
 
@@ -96,7 +98,7 @@ class cms_common extends data_source {
 			(is_null($a_criteria["with_content_type"]) ? '' : 'AND content_type_id=' . $a_criteria["with_content_type"] . ' ') .
 			(is_null($a_criteria["with_topic_type"]) ? '' : 'AND ' . $a_criteria["topic_type_column"] . '=' . $a_criteria["with_topic_type"] . ' ') .
 			(is_null($a_criteria["with_topic_type_in"]) ? '' : 'AND ' . $a_criteria["topic_type_column"] . ' IN ' . $a_criteria["with_topic_type_in"] . ' ') .
-			(is_null($a_criteria["with_tag"]) ? '' : 'AND tags LIKE ' . "'%|" . $a_criteria["with_tag"] . "|%'" . ' ') .
+			(is_null($a_criteria["with_tag"]) ? '' : 'AND tags LIKE ' . "'%|" . $conn->real_escape_string($a_criteria["with_tag"]) . "|%'" . ' ') .
 			(is_null($a_criteria["by_author"]) ? '' : 'AND author_id=' . $a_criteria["by_author"] . ' ');
 
 		if(!$a_criteria["count_only"]) {
@@ -139,8 +141,10 @@ class cms_common extends data_source {
 		$rs->free();
 
 		// push to memcached
-		if($a_criteria["memcached_key"]) {
-			$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
+		if(!is_null($a_mc)) {
+			if($a_criteria["memcached_key"]) {
+				$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
+			}
 		}
 
 		if($a_criteria["count_only"]) {

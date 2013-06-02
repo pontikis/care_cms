@@ -2,6 +2,8 @@
 /**
  * data_source class (database and cache operations)
  *
+ * Supported RDMBS: MySQLi
+ *
  * @author     Christos Pontikis http://pontikis.net
  * @copyright  Christos Pontikis
  * @license    MIT http://opensource.org/licenses/MIT

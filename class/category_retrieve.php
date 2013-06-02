@@ -280,7 +280,7 @@ class category_retrieve extends cms_common {
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
-			"rows_to_return" => TOPICS_PER_PAGE,
+			"rows_to_return" => OPT_MAX_TOPICS_PER_PAGE,
 			"memcached_key" => false,
 			"count_only" => true
 		);
