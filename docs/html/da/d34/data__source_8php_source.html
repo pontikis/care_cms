@@ -67,62 +67,66 @@
 <div class="line"><a name="l00048"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#aa06d3588126ba2b8eaaeaa518304406d">   48</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#aa06d3588126ba2b8eaaeaa518304406d">db_connect</a>($a_db) {</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">if</span>(is_null($this-&gt;conn)) {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a> = <span class="keyword">new</span> mysqli($a_db[<span class="stringliteral">&#39;db_server&#39;</span>], $a_db[<span class="stringliteral">&#39;db_user&#39;</span>], $a_db[<span class="stringliteral">&#39;db_passwd&#39;</span>], $a_db[<span class="stringliteral">&#39;db_name&#39;</span>]);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keywordflow">if</span>(<a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;connect_error) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                echo <span class="stringliteral">&#39;Η σύνδεση με την βάση δεδομένων απέτυχε...&#39;</span> . <span class="stringliteral">&#39;&lt;br&gt;&#39;</span> .</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                    <span class="stringliteral">&#39;Error: &#39;</span> . <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;connect_errno . <span class="charliteral">&#39; &#39;</span> . <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;connect_error;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                exit;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;set_charset(<span class="stringliteral">&#39;utf8&#39;</span>);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                $this-&gt;conn = <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$this-&gt;conn</a>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">   84</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span>(is_null($this-&gt;mc)) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            $mc_items = 0;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = <span class="keyword">new</span> Memcached();</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordflow">foreach</span>($a_mc[<span class="stringliteral">&quot;mc_pool&quot;</span>] as $mc_item) {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                <span class="keywordflow">if</span>(array_key_exists(<span class="stringliteral">&quot;weight&quot;</span>, $mc_item)) {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                    $res_mc = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;addServer($mc_item[<span class="stringliteral">&quot;mc_server&quot;</span>], $mc_item[<span class="stringliteral">&quot;mc_port&quot;</span>], $mc_item[<span class="stringliteral">&quot;weight&quot;</span>]);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                    $res_mc = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;addServer($mc_item[<span class="stringliteral">&quot;mc_server&quot;</span>], $mc_item[<span class="stringliteral">&quot;mc_port&quot;</span>]);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                <span class="keywordflow">if</span>($res_mc) {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                    $mc_items++;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keywordflow">if</span>($mc_items == 0) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = null;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            $this-&gt;mc = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$this-&gt;mc</a>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">  113</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($a_mc, $key) {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        $val = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">if</span>(!is_null(<a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>)) {</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            $val = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;get($key);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">return</span> $val;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">  129</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($a_mc, $key, $val) {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keywordflow">if</span>(!is_null(<a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>)) {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;set($key, $val);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;set_charset(<span class="stringliteral">&#39;utf8&#39;</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            $this-&gt;conn = <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="comment">// custom error handler will catch an E_WARNING, so the following code is deprecated</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">/*          if($conn-&gt;connect_error) {</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">                echo &#39;Η σύνδεση με την βάση δεδομένων απέτυχε...&#39; . &#39;&lt;br&gt;&#39; .</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">                    &#39;Error: &#39; . $conn-&gt;connect_errno . &#39; &#39; . $conn-&gt;connect_error;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">                exit;</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">            } else {</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">                $conn-&gt;set_charset(&#39;utf8&#39;);</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">                $this-&gt;conn = $conn;</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">            }*/</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        }</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$this-&gt;conn</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">   88</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">if</span>(is_null($this-&gt;mc)) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            $mc_items = 0;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = <span class="keyword">new</span> Memcached();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keywordflow">foreach</span>($a_mc[<span class="stringliteral">&quot;mc_pool&quot;</span>] as $mc_item) {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                <span class="keywordflow">if</span>(array_key_exists(<span class="stringliteral">&quot;weight&quot;</span>, $mc_item)) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                    $res_mc = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;addServer($mc_item[<span class="stringliteral">&quot;mc_server&quot;</span>], $mc_item[<span class="stringliteral">&quot;mc_port&quot;</span>], $mc_item[<span class="stringliteral">&quot;weight&quot;</span>]);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                    $res_mc = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;addServer($mc_item[<span class="stringliteral">&quot;mc_server&quot;</span>], $mc_item[<span class="stringliteral">&quot;mc_port&quot;</span>]);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <span class="keywordflow">if</span>($res_mc) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                    $mc_items++;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            }</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keywordflow">if</span>($mc_items == 0) {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = null;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            $this-&gt;mc = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$this-&gt;mc</a>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">  117</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($a_mc, $key) {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        $val = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">if</span>(!is_null(<a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>)) {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            $val = <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;get($key);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keywordflow">return</span> $val;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    }</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">  133</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($a_mc, $key, $val) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordflow">if</span>(!is_null(<a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>)) {</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;set($key, $val);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 2 2013 22:29:30 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 3 2013 22:18:45 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>
