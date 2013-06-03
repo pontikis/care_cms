@@ -100,6 +100,7 @@ class category_retrieve extends cms_common {
 				$this->data_origin = 0;
 
 				// get category page topics (always from database)
+				$category_cached["page_topics"] = array();
 				if($category_cached["list_mode"] == 1) {
 					$res = $this->get_category_page_topics($category_cached);
 					$category_cached["total_topics"] = $res["total_topics"];
@@ -146,6 +147,7 @@ class category_retrieve extends cms_common {
 		}
 
 		// get category topics (page topics - always from database) ------------
+		$category["page_topics"] = array();
 		if($category["list_mode"] == 1) {
 			$res = $this->get_category_page_topics($category);
 			$category["total_topics"] = $res["total_topics"];
@@ -165,26 +167,37 @@ class category_retrieve extends cms_common {
 	 * Get category record (from database)
 	 *
 	 * @param string $category_url
-	 * @return array|bool
+	 * @return array|bool (the record as an array or false on failure)
 	 */
 	public function get_category_properties($category_url) {
 		$conn = $this->db_connect($this->db_settings);
-		$sql = 'SELECT * FROM categories WHERE url =' . "'" . $conn->real_escape_string($category_url) . "'";
-		$rs = $conn->query($sql);
-		if($rs === false) {
-			echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
-		} else {
-			if($rs->num_rows == 1) {
-				$rs->data_seek(0);
-				$category = $rs->fetch_array(MYSQLI_ASSOC);
-				$this->data_origin = 1;
-				$rs->free();
-			} else {
-				$rs->free();
-				return false;
-			}
+		$sql = 'SELECT * FROM categories WHERE url = ?';
+
+		/* Prepare statement */
+		$stmt = $conn->prepare($sql);
+		if($stmt === false) {
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		}
+		/* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
+		$stmt->bind_param('s', $category_url);
+		/* Execute statement */
+		$stmt->execute();
+		/* get result */
+		$res = $stmt->get_result();
+		$rs = $res->fetch_all(MYSQLI_ASSOC);
+		if(count($rs) == 1) {
+			$category=$rs[0];
+			$this->data_origin = 1;
+			/* free result */
+			$stmt->free_result();
+		} else {
+			/* free result */
+			$stmt->free_result();
+			return false;
+		}
+		/* close statement */
+		$stmt->close();
 
 		return $category;
 	}
@@ -208,8 +221,8 @@ class category_retrieve extends cms_common {
 			}
 			$rs = $conn->query($sql);
 			if($rs === false) {
-				echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-				exit;
+				$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+				trigger_error($user_error, E_USER_ERROR);
 			}
 
 			if($category['ctg_type'] == 2) { // topic type categories
@@ -245,8 +258,8 @@ class category_retrieve extends cms_common {
 				'ORDER BY display_order_b';
 			$rs = $conn->query($sql);
 			if($rs === false) {
-				echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-				exit;
+				$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+				trigger_error($user_error, E_USER_ERROR);
 			}
 			$rs->data_seek(0);
 			while($rel_cat = $rs->fetch_assoc()) {
@@ -314,8 +327,8 @@ class category_retrieve extends cms_common {
 
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$rows = $rs->num_rows;
 		}
@@ -337,8 +350,8 @@ class category_retrieve extends cms_common {
 				$sql_topics = 'SELECT id, title, url FROM topics WHERE topic_type_id=' . $ctg_id . ' ORDER BY display_order';
 				$rs_topics = $conn->query($sql_topics);
 				if($rs_topics === false) {
-					echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-					exit;
+					$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+					trigger_error($user_error, E_USER_ERROR);
 				}
 				$rs_topics->data_seek(0);
 				$html .= '<ul>' . PHP_EOL;
@@ -367,8 +380,8 @@ class category_retrieve extends cms_common {
 		$sql = 'SELECT id, category, url FROM categories WHERE parent_b_id=' . $parent_id . ' AND url is not null ORDER BY display_order_b';
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$rows = $rs->num_rows;
 		}
@@ -425,7 +438,7 @@ class category_retrieve extends cms_common {
 				return array();
 			} else {
 				$a_category_popular_topics["with_topic_type"] = null;
-				$a_category_popular_topics["with_topic_type_in"] = $category["ctg_type"] == 2 ? '(' . implode(',', $a_sub_ctgs) . ')' : null;
+				$a_category_popular_topics["with_topic_type_in"] = $category["ctg_type"] == 2 ? $a_sub_ctgs : null;
 			}
 		}
 
@@ -447,8 +460,8 @@ class category_retrieve extends cms_common {
 
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$rows = $rs->num_rows;
 		}

@@ -33,7 +33,7 @@ class cms_common extends data_source {
 	 *     "date_until" => "date", (UTC date with format YYYYMMDDHHMMSS or null)
 	 *     "with_content_type" => int, (ctg_id or null)
 	 *     "with_topic_type" => int, (ctg_id or null)
-	 *     "with_topic_type_in" => string, (string of IDs or null)
+	 *     "with_topic_type_in" => array(id1,id2,id3), (array of IDs or null)
 	 *     "topic_type_column" => "topic_type_id", (topic_type_id/topic_top_type_id or null)
 	 *     "with_tag" => "tag_name", (or null)
 	 *     "by_author" => int,  author_is or null
@@ -101,7 +101,7 @@ class cms_common extends data_source {
 			(is_null($a_criteria["date_from"]) ? '' : 'AND date_published >= ' . "'" . $a_criteria["date_from"] . "' ") .
 			(is_null($a_criteria["with_content_type"]) ? '' : 'AND content_type_id=' . $a_criteria["with_content_type"] . ' ') .
 			(is_null($a_criteria["with_topic_type"]) ? '' : 'AND ' . $a_criteria["topic_type_column"] . '=' . $a_criteria["with_topic_type"] . ' ') .
-			(is_null($a_criteria["with_topic_type_in"]) ? '' : 'AND ' . $a_criteria["topic_type_column"] . ' IN ' . $a_criteria["with_topic_type_in"] . ' ') .
+			((is_null($a_criteria["with_topic_type_in"]) || count($a_criteria["with_topic_type_in"]) == 0) ? '' : 'AND ' . $a_criteria["topic_type_column"] . ' IN (' . implode(",", $a_criteria["with_topic_type_in"]) . ') ') .
 			(is_null($a_criteria["with_tag"]) ? '' : 'AND tags LIKE ' . "'%|" . $conn->real_escape_string($a_criteria["with_tag"]) . "|%'" . ' ') .
 			(is_null($a_criteria["by_author"]) ? '' : 'AND author_id=' . $a_criteria["by_author"] . ' ');
 
@@ -118,9 +118,8 @@ class cms_common extends data_source {
 
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			echo 'Wrong SQL...' . '<br>' .
-				'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		}
 		$rs->data_seek(0);
 

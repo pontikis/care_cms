@@ -177,27 +177,37 @@ class topic_retrieve extends cms_common {
 
 		$conn = $this->db_connect($this->db_settings);
 		$sql = 'SELECT * FROM topics t LEFT OUTER JOIN content c ON (t.content_id = c.id) ' .
-			'WHERE t.id=' . $this->topic_id . ' ' .
+			'WHERE t.id = ? ' .
 			'AND publish_status_id=' . TOPIC_STATUS_PUBLISHED . ' ' .
 			'AND date_published IS NOT null ' .
 			'AND date_published <= ' . "'" . $this->now('UTC') . "'";
-		$res_topic = $conn->query($sql);
-		if($res_topic === false) {
-			echo 'Wrong SQL...' . '<br>' .
-				'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
-		} else {
-			$res_topic_rows = $res_topic->num_rows;
-			if($res_topic_rows == 1) {
-				$res_topic->data_seek(0);
-				$topic = $res_topic->fetch_array(MYSQLI_ASSOC);
-				$this->data_origin = 1;
-				$res_topic->free();
-			} else {
-				$res_topic->free();
-				return false;
-			}
+
+
+		/* Prepare statement */
+		$stmt = $conn->prepare($sql);
+		if($stmt === false) {
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		}
+		/* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
+		$stmt->bind_param('i', $this->topic_id);
+		/* Execute statement */
+		$stmt->execute();
+		/* get result */
+		$res = $stmt->get_result();
+		$rs = $res->fetch_all(MYSQLI_ASSOC);
+		if(count($rs) == 1) {
+			$topic=$rs[0];
+			$this->data_origin = 1;
+			/* free result */
+			$stmt->free_result();
+		} else {
+			/* free result */
+			$stmt->free_result();
+			return false;
+		}
+		/* close statement */
+		$stmt->close();
 
 		return $topic;
 	}
@@ -225,8 +235,8 @@ class topic_retrieve extends cms_common {
 		$sql = 'SELECT username, firstname, lastname FROM users WHERE id=' . $author_id;
 		$res_author = $conn->query($sql);
 		if($res_author === false) {
-			echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$res_author->data_seek(0);
 			$author = $res_author->fetch_array(MYSQLI_ASSOC);
@@ -266,9 +276,8 @@ class topic_retrieve extends cms_common {
 		$sql = 'SELECT category, url FROM categories WHERE id=' . $cat_id;
 		$res_ctg = $conn->query($sql);
 		if($res_ctg === false) {
-			echo 'Wrong SQL...' . '<br>' .
-				'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$res_ctg->data_seek(0);
 			$cat = $res_ctg->fetch_array(MYSQLI_ASSOC);
@@ -312,9 +321,8 @@ class topic_retrieve extends cms_common {
 			$sql = 'SELECT category, url, parent_b_id FROM categories WHERE id=' . $current_cat_id;
 			$res_ctg = $conn->query($sql);
 			if($res_ctg === false) {
-				echo 'Wrong SQL...' . '<br>' .
-					'Error: ' . $conn->errno . ' ' . $conn->error;
-				exit;
+				$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+				trigger_error($user_error, E_USER_ERROR);
 			} else {
 				$res_ctg->data_seek(0);
 				$cat = $res_ctg->fetch_array(MYSQLI_ASSOC);
@@ -342,9 +350,8 @@ class topic_retrieve extends cms_common {
 		$conn = $this->db_connect($this->db_settings);
 		$sql = 'UPDATE topics SET impressions = impressions + 1 WHERE id=' . $topic_id;
 		if(!$conn->query($sql)) {
-			echo 'Wrong SQL...' . '<br>' .
-				'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		}
 	}
 

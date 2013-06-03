@@ -48,15 +48,19 @@ class data_source extends app_common {
 	public function db_connect($a_db) {
 		if(is_null($this->conn)) {
 			$conn = new mysqli($a_db['db_server'], $a_db['db_user'], $a_db['db_passwd'], $a_db['db_name']);
+			$conn->set_charset('utf8');
+			$this->conn = $conn;
 
-			if($conn->connect_error) {
+			// custom error handler will catch an E_WARNING, so the following code is deprecated
+
+/*			if($conn->connect_error) {
 				echo 'Η σύνδεση με την βάση δεδομένων απέτυχε...' . '<br>' .
 					'Error: ' . $conn->connect_errno . ' ' . $conn->connect_error;
 				exit;
 			} else {
 				$conn->set_charset('utf8');
 				$this->conn = $conn;
-			}
+			}*/
 		}
 		return $this->conn;
 	}
