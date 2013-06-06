@@ -13,13 +13,16 @@ class member_retrieve extends cms_common {
 	/** @var bool Option to use memcached (true) or not (false) */
 	private $opt_use_memcached;
 
+	/** @var bool Option to increase profile view (true) or not (false) */
+	private $opt_increase_profile_views;
+
 	/** @var bool Option opt_show_member_bookmarks (true) or not (false) */
 	private $opt_show_member_bookmarks;
 
 	/** @var bool Option opt_show_member_recent_posts (true) or not (false) */
 	private $opt_show_member_recent_posts;
 
-	/** @var int Data origin (0 = memcached, 1 = database) */
+	/** @var string Data origin ('undefined', 'memcached', 'database') */
 	private $data_origin;
 
 	/**
@@ -28,20 +31,25 @@ class member_retrieve extends cms_common {
 	 * @param array $a_db database settings
 	 * @param array $a_mc memcached settings
 	 * @param string $member_url member url
+	 * @param int $offset offset to start topics display
+	 * @param int $max_topics_per_page max topics per page
 	 * @param int $max_member_bookmarks max member bookmarks
 	 * @param int $max_author_recent_posts max author recent posts
 	 */
-	public function __construct($a_db, $a_mc, $member_url, $max_member_bookmarks, $max_author_recent_posts) {
+	public function __construct($a_db, $a_mc, $member_url,  $offset, $max_topics_per_page, $max_member_bookmarks, $max_author_recent_posts) {
 		// initialize
 		$this->db_settings = $a_db;
 		$this->mc_settings = $a_mc;
 		$this->member_url = $member_url;
+		$this->offset = $offset;
+		$this->max_topics_per_page = $max_topics_per_page;
 		$this->max_member_bookmarks = $max_member_bookmarks;
 		$this->max_author_recent_posts = $max_author_recent_posts;
 
 		$this->opt_use_memcached = $a_mc["use_memcached"];
-		$this->opt_show_member_bookmarks = OPT_SHOW_MEMBER_BOOKMARKS;
-		$this->opt_show_member_recent_posts = OPT_SHOW_MEMBER_RECENT_POSTS;
+		$this->opt_increase_profile_views = $this->conf['opt_log_profile_views'];
+		$this->opt_show_member_bookmarks = $this->conf['opt_show_member_bookmarks'];
+		$this->opt_show_member_recent_posts = $this->conf['opt_show_member_recent_posts'];
 		$this->data_origin = null;
 	}
 
@@ -52,6 +60,15 @@ class member_retrieve extends cms_common {
 	 */
 	public function set_opt_use_memcached($flag) {
 		$this->opt_use_memcached = $flag;
+	}
+
+	/**
+	 * Set opt_increase_profile_views
+	 *
+	 * @param bool $flag opt_increase_profile_views
+	 */
+	public function set_opt_increase_profile_views($flag) {
+		$this->opt_increase_profile_views = $flag;
 	}
 
 	/**
@@ -73,174 +90,166 @@ class member_retrieve extends cms_common {
 	}
 
 	/**
-	 * Get data origin (0 = memcached, 1 = database)
+	 * Get data origin ('undefined', 'memcached', 'database')
 	 *
-	 * @return int|null data origin
+	 * @return string data origin
 	 */
 	public function get_data_origin() {
 		return $this->data_origin;
 	}
 
+
 	/**
-	 * Get topic from topic id
+	 * Get member
 	 *
-	 * @return array|bool post data or false
+	 * @return array|bool member data or false (not existed or not active member)
 	 */
 	public function get_member() {
 
-		$member = false;
-		$member_key = 'care_member_' . sha1($this->member_url);
-
-		// pull from memcached
-		if($this->opt_use_memcached) {
-			$category_cached = $this->pull_from_memcached($this->mc_settings, $member_key);
-			if($category_cached) {
-				$this->data_origin = 0;
-
-				// get category page topics (always from database)
-				if($category_cached["list_mode"] == 1) {
-					$res = $this->get_category_page_topics($category_cached);
-					$category_cached["total_topics"] = $res["total_topics"];
-					$category_cached["page_topics"] = $res["page_topics"];
-				}
-
-				// get category popular topics (always from database)
-				$category_cached["a_popular_topics"] = array();
-				if($this->opt_show_popular_topics) {
-					$category_cached["a_popular_topics"] = $this->get_category_popular_topics($category_cached);
-				}
-
-				return $category_cached;
-			}
-		}
-
-		// retrieve member from database -------------------------------------
-		$member = $this->get_category_properties($this->category_url);
+		// get member properties ------------------------------------------------
+		$member = $this->get_member_properties();
 		if(!$member) {
 			return false;
 		}
 
-		// get relative categories ---------------------------------------------
-		if($this->opt_show_relative_categories) {
-			$category["a_rel_categories"] = $this->get_relative_categories($category);
+		// increase profile views ----------------------------------------------
+		if($this->opt_increase_profile_views) {
+			// increase profile views to display on member page
+			$member["profile_views"] = $member["profile_views"] + 1;
+			// increase profile views in database
+			$this->increase_profile_views();
+			// increase profile views in memcached
+			if($this->opt_use_memcached) {
+				$member_key = 'care_member_' . sha1($this->member_url);
+				$this->push_to_memcached($this->mc_settings, $member_key, $member);
+			}
 		}
 
-		// get category topics (hierarchical view html) ------------------------
-		if($category["list_mode"] == 2) {
-			$category["topics_toc_html"] = $this->get_category_toc_html($category["id"]);
-		} else if($category["list_mode"] == 3) {
-			$category["topics_toc_html"] = $this->get_category_toc_no_posts_html($category["id"]);
+
+		$member['topics_count'] = $this->get_member_topics_count($member['id']);
+
+		$member['bookmarks_count'] = $this->get_member_bookmarks_count($member['id']);
+
+		$member['comments_count'] = $this->get_member_comments_count($member['id']);
+
+		if($this->opt_show_member_recent_posts) {
+			$member['a_recent_topics'] = $this->get_member_recent_topics($member['id']);
 		}
 
-		// get category subcategories
-		if($category['list_mode'] == 2) {
-			$category["a_sub_ctgs"] = $this->get_sub_categories($category["id"]);
-		}
-
-		// push to memcached ---------------------------------------------------
-		if($this->opt_use_memcached) {
-			$category["date_cached"] = $this->now('UTC');
-			$this->push_to_memcached($this->mc_settings, $category_key, $category);
-		}
-
-		// get category topics (page topics - always from database) ------------
-		if($category["list_mode"] == 1) {
-			$res = $this->get_category_page_topics($category);
-			$category["total_topics"] = $res["total_topics"];
-			$category["page_topics"] = $res["page_topics"];
-		}
-
-		// get category popular topics (always from database) ------------------
-		$category["a_popular_topics"] = array();
-		if($this->opt_show_popular_topics) {
-			$category["a_popular_topics"] = $this->get_category_popular_topics($category);
+		if($this->opt_show_member_bookmarks) {
+			$member['a_bookmarks'] = $this->get_member_bookmarks($member['id']);
 		}
 
 		return $member;
 	}
 
+
 	/**
-	 * Get member record (from database)
+	 * Get member properties
 	 *
-	 * @param string $category_url
-	 * @return array|bool
+	 * @return array|bool member record data or false  (not existed or not active member)
 	 */
-	public function get_category_properties($category_url) {
+	public function get_member_properties() {
+
+		$member_key = 'care_member_' . sha1($this->member_url);
+
+		// pull from memcached
+		if($this->opt_use_memcached) {
+			$member = $this->pull_from_memcached($this->mc_settings, $member_key);
+			if($member) {
+				$this->data_origin = 'memcached';
+				return $member;
+			}
+		}
+
 		$conn = $this->db_connect($this->db_settings);
-		$sql = 'SELECT * FROM categories WHERE url =' . "'" . $conn->real_escape_string($category_url) . "'";
-		$rs = $conn->query($sql);
-		if($rs === false) {
-			echo 'Wrong SQL...' . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			exit;
-		} else {
-			if($rs->num_rows == 1) {
-				$rs->data_seek(0);
-				$category = $rs->fetch_array(MYSQLI_ASSOC);
-				$this->data_origin = 1;
-				$rs->free();
-			} else {
-				$rs->free();
-				return false;
-			}
-		}
+		$sql = 'SELECT * FROM users WHERE user_status_id=' . USER_ACTIVE . ' AND username = ?';
 
-		return $category;
+		/* Prepare statement */
+		$stmt = $conn->prepare($sql);
+		if($stmt === false) {
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
+		}
+		/* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
+		$stmt->bind_param('s', $this->member_url);
+		/* Execute statement */
+		$stmt->execute();
+		/* get result */
+		$res = $stmt->get_result();
+		$rs = $res->fetch_all(MYSQLI_ASSOC);
+		if(count($rs) == 1) {
+			$member=$rs[0];
+			$this->data_origin = 'database';
+			/* free result */
+			$stmt->free_result();
+		} else {
+			/* free result */
+			$stmt->free_result();
+			return false;
+		}
+		/* close statement */
+		$stmt->close();
+
+		return $member;
+
 	}
 
 	/**
-	 * Get gategory popular topics (always from database)
-	 *
-	 * @param $category
-	 * @return array
+	 * Increase profile views
 	 */
-	public function get_category_popular_topics($category) {
+	public function increase_profile_views() {
+		$conn = $this->db_connect($this->db_settings);
+		$sql = 'UPDATE users SET profile_views = profile_views + 1 WHERE username = ?';
 
-		if($category['list_mode'] == 3) {
-			return array();
+		/* Prepare statement */
+		$stmt = $conn->prepare($sql);
+		if($stmt === false) {
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
 		}
 
-		$a_category_popular_topics = array(
-			"extra_columns_topics" => array("impressions"),
-			"extra_columns_content" => null,
-			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
-			"with_content_type" => ($category["ctg_type"] == 1 ? $category["id"] : null),
-			"with_topic_type" => ($category["ctg_type"] == 2 ? $category["id"] : null),
-			"with_topic_type_in" => null,
-			"topic_type_column" => (in_array($category["id"], array(1, 4)) ? 'topic_top_type_id' : 'topic_type_id'),
-			"with_tag" => null,
-			"by_author" => null,
-			"order_by" => "impressions",
-			"sort_order" => "DESC",
-			"offset" => 0,
-			"rows_to_return" => $this->max_popular,
-			"memcached_key" => null,
-			"count_only" => false
-		);
+		/* Bind parameters. TYpes: s = string, i = integer, d = double,  b = blob */
+		$stmt->bind_param('s',$this->member_url);
 
-		if($category['list_mode'] == 2) {
-			$a_sub_ctgs = $category["a_sub_ctgs"];
-			if(count($a_sub_ctgs) == 0) {
-				return array();
-			} else {
-				$a_category_popular_topics["with_topic_type"] = null;
-				$a_category_popular_topics["with_topic_type_in"] = $category["ctg_type"] == 2 ? '(' . implode(',', $a_sub_ctgs) . ')' : null;
-			}
+		/* Execute statement */
+		$stmt->execute();
+
+		if($stmt->affected_rows != 1) {
+			$user_error =  'Database error: Username not unique. ' . $sql;
+			trigger_error($user_error, E_USER_ERROR);
 		}
-
-		return $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_popular_topics);
+		/* close statement */
+		$stmt->close();
 	}
+
+
+	public function get_member_topics_count($member_id) {
+
+	}
+
+	public function get_member_bookmarks_count($member_id) {
+
+	}
+
+	public function get_member_comments_count($member_id) {
+
+	}
+
+	public function get_member_recent_topics($member_id) {
+
+	}
+
+	public function get_member_bookmarks($member_id) {
+
+	}
+
 
 	/**
 	 * Destructor
 	 */
 	public function __destruct() {
-
-		$conn = $this->db_connect($this->db_settings);
-		if($conn) {
-			$conn->close();
-		}
+		$this->db_disconnect();
 	}
 
 }

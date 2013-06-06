@@ -19,7 +19,7 @@ class category_retrieve extends cms_common {
 	/** @var bool Option opt_show_popular_topics (true) or not (false) */
 	private $opt_show_popular_topics;
 
-	/** @var int Data origin (0 = memcached, 1 = database) */
+	/** @var string Data origin ('undefined', 'memcached', 'database') */
 	private $data_origin;
 
 	/**
@@ -34,6 +34,7 @@ class category_retrieve extends cms_common {
 	 */
 	public function __construct($a_db, $a_mc, $category_url, $offset, $max_topics_per_page, $max_popular) {
 		// initialize
+		global $care_conf;
 		$this->db_settings = $a_db;
 		$this->mc_settings = $a_mc;
 		$this->category_url = $category_url;
@@ -42,9 +43,9 @@ class category_retrieve extends cms_common {
 		$this->max_popular = $max_popular;
 
 		$this->opt_use_memcached = $a_mc["use_memcached"];
-		$this->opt_show_popular_topics = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;
-		$this->opt_show_relative_categories = OPT_SHOW_RELATIVE_CATEGORIES;
-		$this->data_origin = null;
+		$this->opt_show_popular_topics = $care_conf['opt_show_popular_topics_per_category'];
+		$this->opt_show_relative_categories = $care_conf['opt_show_relative_categories'];
+		$this->data_origin = 'undefined';
 	}
 
 	/**
@@ -75,75 +76,71 @@ class category_retrieve extends cms_common {
 	}
 
 	/**
-	 * Get data origin (0 = memcached, 1 = database)
+	 * Get data origin ('undefined', 'memcached', 'database')
 	 *
-	 * @return int|null data origin
+	 * @return string data origin
 	 */
 	public function get_data_origin() {
 		return $this->data_origin;
 	}
 
 	/**
-	 * Get topic from topic id
+	 * Get category
 	 *
-	 * @return array|bool post data or false
+	 * @return array|bool category data or false (not existed category)
 	 */
 	public function get_category() {
 
-		$category = false;
-		$category_key = 'care_category_' . sha1($this->category_url);
-
 		// pull from memcached
 		if($this->opt_use_memcached) {
-			$category_cached = $this->pull_from_memcached($this->mc_settings, $category_key);
-			if($category_cached) {
-				$this->data_origin = 0;
-
-				// get category page topics (always from database)
-				$category_cached["page_topics"] = array();
-				if($category_cached["list_mode"] == 1) {
-					$res = $this->get_category_page_topics($category_cached);
-					$category_cached["total_topics"] = $res["total_topics"];
-					$category_cached["page_topics"] = $res["page_topics"];
-				}
-
-				// get category popular topics (always from database)
-				$category_cached["a_popular_topics"] = array();
-				if($this->opt_show_popular_topics) {
-					$category_cached["a_popular_topics"] = $this->get_category_popular_topics($category_cached);
-				}
-
-				return $category_cached;
+			$category_key = 'care_category_' . sha1($this->category_url);
+			$category = $this->pull_from_memcached($this->mc_settings, $category_key);
+			if($category) {
+				$this->data_origin = 'memcached';
 			}
 		}
 
-		// retrieve category from database -------------------------------------
-		$category = $this->get_category_properties($this->category_url);
-		if(!$category) {
-			return false;
+		// get category properties ---------------------------------------------
+		if($this->data_origin == 'undefined') {
+			$category = $this->get_category_properties();
+			if(!$category) {
+				return false;
+			}
 		}
 
 		// get relative categories ---------------------------------------------
 		if($this->opt_show_relative_categories) {
-			$category["a_rel_categories"] = $this->get_relative_categories($category);
+			if(!array_key_exists('a_rel_categories', $category)) {
+				$category["a_rel_categories"] = $this->get_relative_categories($category);
+			}
 		}
 
 		// get category topics (hierarchical view html) ------------------------
 		if($category["list_mode"] == 2) {
-			$category["topics_toc_html"] = $this->get_category_toc_html($category["id"]);
-		} else if($category["list_mode"] == 3) {
-			$category["topics_toc_html"] = $this->get_category_toc_no_posts_html($category["id"]);
+			if(!array_key_exists('topics_toc_html', $category)) {
+				$category["topics_toc_html"] = $this->get_category_toc_html($category["id"]);
+			}
+		}
+		if($category["list_mode"] == 3) {
+			if(!array_key_exists('topics_toc_html', $category)) {
+				$category["topics_toc_html"] = $this->get_category_toc_no_posts_html($category["id"]);
+			}
 		}
 
 		// get category subcategories
 		if($category['list_mode'] == 2) {
-			$category["a_sub_ctgs"] = $this->get_sub_categories($category["id"]);
+			if(!array_key_exists('a_sub_ctgs', $category)) {
+				$category["a_sub_ctgs"] = $this->get_sub_categories($category["id"]);
+			}
 		}
 
 		// push to memcached ---------------------------------------------------
-		if($this->opt_use_memcached) {
-			$category["date_cached"] = $this->now('UTC');
-			$this->push_to_memcached($this->mc_settings, $category_key, $category);
+		if($this->data_origin == 'database') {
+			if($this->opt_use_memcached) {
+				$category_key = 'care_category_' . sha1($this->category_url);
+				$category["date_cached"] = $this->now('UTC');
+				$this->push_to_memcached($this->mc_settings, $category_key, $category);
+			}
 		}
 
 		// get category topics (page topics - always from database) ------------
@@ -157,38 +154,40 @@ class category_retrieve extends cms_common {
 		// get category popular topics (always from database) ------------------
 		$category["a_popular_topics"] = array();
 		if($this->opt_show_popular_topics) {
-			$category["a_popular_topics"] = $this->get_category_popular_topics($category);
+			if($category['list_mode'] != 3) {
+				$category["a_popular_topics"] = $this->get_category_popular_topics($category);
+			}
 		}
 
 		return $category;
 	}
 
 	/**
-	 * Get category record (from database)
+	 * Get category properties
 	 *
-	 * @param string $category_url
-	 * @return array|bool (the record as an array or false on failure)
+	 * @return array|bool category record data or false (non existed category)
 	 */
-	public function get_category_properties($category_url) {
+	public function get_category_properties() {
+
 		$conn = $this->db_connect($this->db_settings);
 		$sql = 'SELECT * FROM categories WHERE url = ?';
 
 		/* Prepare statement */
 		$stmt = $conn->prepare($sql);
 		if($stmt === false) {
-			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 			trigger_error($user_error, E_USER_ERROR);
 		}
 		/* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
-		$stmt->bind_param('s', $category_url);
+		$stmt->bind_param('s', $this->category_url);
 		/* Execute statement */
 		$stmt->execute();
 		/* get result */
 		$res = $stmt->get_result();
 		$rs = $res->fetch_all(MYSQLI_ASSOC);
 		if(count($rs) == 1) {
-			$category=$rs[0];
-			$this->data_origin = 1;
+			$category = $rs[0];
+			$this->data_origin = 'database';
 			/* free result */
 			$stmt->free_result();
 		} else {
@@ -206,7 +205,7 @@ class category_retrieve extends cms_common {
 	 * Get relative categories
 	 *
 	 * @param array $category
-	 * @return array
+	 * @return array relative categories (title, url)
 	 */
 	public function get_relative_categories($category) {
 		$a_rel_categories = array();
@@ -221,7 +220,7 @@ class category_retrieve extends cms_common {
 			}
 			$rs = $conn->query($sql);
 			if($rs === false) {
-				$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+				$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 				trigger_error($user_error, E_USER_ERROR);
 			}
 
@@ -258,7 +257,7 @@ class category_retrieve extends cms_common {
 				'ORDER BY display_order_b';
 			$rs = $conn->query($sql);
 			if($rs === false) {
-				$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+				$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 				trigger_error($user_error, E_USER_ERROR);
 			}
 			$rs->data_seek(0);
@@ -276,8 +275,8 @@ class category_retrieve extends cms_common {
 	/**
 	 * Get category page topics (always from database)
 	 *
-	 * @param array $category
-	 * @return array
+	 * @param array $category category properties
+	 * @return array page topics (title, url, date_published, impressions, comments, ctg_intro, ctg_image)
 	 */
 	private function get_category_page_topics($category) {
 		$a_category_page_topics = array(
@@ -315,7 +314,7 @@ class category_retrieve extends cms_common {
 	 * Get category contents in hierarchical view (as html)
 	 *
 	 * @param int $parent_id the category id
-	 * @return string
+	 * @return string category toc (as html)
 	 */
 	public function get_category_toc_html($parent_id) {
 
@@ -327,7 +326,7 @@ class category_retrieve extends cms_common {
 
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$rows = $rs->num_rows;
@@ -350,7 +349,7 @@ class category_retrieve extends cms_common {
 				$sql_topics = 'SELECT id, title, url FROM topics WHERE topic_type_id=' . $ctg_id . ' ORDER BY display_order';
 				$rs_topics = $conn->query($sql_topics);
 				if($rs_topics === false) {
-					$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+					$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 					trigger_error($user_error, E_USER_ERROR);
 				}
 				$rs_topics->data_seek(0);
@@ -371,7 +370,7 @@ class category_retrieve extends cms_common {
 	 * Get category and its subcategories in hierarchical view (as html)
 	 *
 	 * @param int $parent_id the category id
-	 * @return string
+	 * @return string category toc (as html)
 	 */
 	public function get_category_toc_no_posts_html($parent_id) {
 
@@ -380,7 +379,7 @@ class category_retrieve extends cms_common {
 		$sql = 'SELECT id, category, url FROM categories WHERE parent_b_id=' . $parent_id . ' AND url is not null ORDER BY display_order_b';
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$rows = $rs->num_rows;
@@ -403,14 +402,10 @@ class category_retrieve extends cms_common {
 	/**
 	 * Get gategory popular topics (always from database)
 	 *
-	 * @param $category
-	 * @return array
+	 * @param array $category category properties
+	 * @return array popular topics (title, url, impressions, date published)
 	 */
 	public function get_category_popular_topics($category) {
-
-		if($category['list_mode'] == 3) {
-			return array();
-		}
 
 		$a_category_popular_topics = array(
 			"extra_columns_topics" => array("impressions"),
@@ -448,8 +443,8 @@ class category_retrieve extends cms_common {
 	/**
 	 * Get subcategories of a category using recursion
 	 *
-	 * @param $category_id
-	 * @return mixed
+	 * @param int $category_id
+	 * @return array subcategories IDs
 	 */
 	public function get_sub_categories($category_id) {
 
@@ -460,7 +455,7 @@ class category_retrieve extends cms_common {
 
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 			trigger_error($user_error, E_USER_ERROR);
 		} else {
 			$rows = $rs->num_rows;
@@ -482,11 +477,7 @@ class category_retrieve extends cms_common {
 	 * Destructor
 	 */
 	public function __destruct() {
-
-		$conn = $this->db_connect($this->db_settings);
-		if($conn) {
-			$conn->close();
-		}
+		$this->db_disconnect();
 	}
 
 }

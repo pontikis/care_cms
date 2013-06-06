@@ -52,7 +52,7 @@ class cms_common extends data_source {
 
 		// pull from memcached
 		if(!is_null($a_mc) && !is_null($a_criteria["memcached_key"])) {
-			$a_topics_cached = $this->pull_from_memcached($this->mc_settings, $a_criteria["memcached_key"]);
+			$a_topics_cached = $this->pull_from_memcached($a_mc, $a_criteria["memcached_key"]);
 			if($a_topics_cached) {
 				return $a_topics_cached;
 			}
@@ -118,7 +118,7 @@ class cms_common extends data_source {
 
 		$rs = $conn->query($sql);
 		if($rs === false) {
-			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			$user_error = 'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
 			trigger_error($user_error, E_USER_ERROR);
 		}
 		$rs->data_seek(0);
@@ -154,6 +154,38 @@ class cms_common extends data_source {
 			return $a_topics;
 		}
 
+	}
+
+
+	/**
+	 * Get recent topics
+	 *
+	 * @param array $a_db database connection settings
+	 * @param array $a_mc memcached settings
+	 * @param int $max_recent max recent topics to return
+	 * @return array recent topics array
+	 */
+	public function get_recent_topics($a_db, $a_mc, $max_recent) {
+		$a_recent_topics = array(
+			"extra_columns_topics" => null,
+			"extra_columns_content" => null,
+			"publish_status" => TOPIC_STATUS_PUBLISHED,
+			"date_from" => null,
+			"date_until" => null,
+			"with_content_type" => null,
+			"with_topic_type" => null,
+			"with_topic_type_in" => null,
+			"topic_type_column" => null,
+			"with_tag" => null,
+			"by_author" => null,
+			"order_by" => "date_published",
+			"sort_order" => "DESC",
+			"offset" => 0,
+			"rows_to_return" => $max_recent,
+			"memcached_key" => "care_recent_topics",
+			"count_only" => false
+		);
+		return $this->get_topics_list($a_db, $a_mc, $a_recent_topics);
 	}
 
 }

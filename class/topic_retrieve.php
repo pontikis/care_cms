@@ -16,7 +16,10 @@ class topic_retrieve extends cms_common {
 	/** @var bool Option to increase impressions (true) or not (false) */
 	private $opt_increase_impressions;
 
-	/** @var int Data origin (0 = memcached, 1 = database) */
+	/** @var bool Option to show recent topics (true) or not (false) */
+	private $opt_show_recent_topics;
+
+	/** @var string Data origin ('undefined', 'memcached', 'database') */
 	private $data_origin;
 
 	/**
@@ -29,14 +32,17 @@ class topic_retrieve extends cms_common {
 	 */
 	public function __construct($a_db, $a_mc, $topic_id, $max_recent_topics) {
 		// initialize
+		global $care_conf;
+
 		$this->db_settings = $a_db;
 		$this->mc_settings = $a_mc;
 		$this->topic_id = $topic_id;
 		$this->max_recent_topics = $max_recent_topics;
 
 		$this->opt_use_memcached = $a_mc["use_memcached"];
-		$this->opt_increase_impressions = OPT_LOG_TOPIC_IMPRESSIONS;
-		$this->data_origin = null;
+		$this->opt_show_recent_topics = $care_conf['opt_show_recent_topics'];
+		$this->opt_increase_impressions = $care_conf['opt_log_topic_impressions'];
+		$this->data_origin = 'undefined';
 	}
 
 	/**
@@ -58,80 +64,49 @@ class topic_retrieve extends cms_common {
 	}
 
 	/**
-	 * Get data origin (0 = memcached, 1 = database)
+	 * Set opt_show_recent_topics
 	 *
-	 * @return int|null data origin
+	 * @param bool $flag opt_show_recent_topics value
+	 */
+	public function set_opt_show_recent_topics($flag) {
+		$this->opt_show_recent_topics = $flag;
+	}
+
+	/**
+	 * Get data origin ('undefined', 'memcached', 'database')
+	 *
+	 * @return string data origin
 	 */
 	public function get_data_origin() {
 		return $this->data_origin;
 	}
 
 	/**
-	 * Get topic from topic id
+	 * Get topic
 	 *
-	 * @return array|bool post data or false
+	 * @return array|bool topic data or false (not existed or not published topic)
 	 */
 	public function get_topic() {
-		$topic = false;
-		$topic_id = $this->topic_id;
-		$topic_key = 'care_topic_' . $topic_id;
-		$a_recent_topics = array(
-			"extra_columns_topics" => null,
-			"extra_columns_content" => null,
-			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
-			"with_content_type" => null,
-			"with_topic_type" => null,
-			"with_topic_type_in" => null,
-			"topic_type_column" => null,
-			"with_tag" => null,
-			"by_author" => null,
-			"order_by" => "date_published",
-			"sort_order" => "DESC",
-			"offset" => 0,
-			"rows_to_return" => $this->max_recent_topics,
-			"memcached_key" => "care_recent_topics",
-			"count_only" => false
-		);
 
-		// pull from memcached
-		if($this->opt_use_memcached) {
-			$topic_cached = $this->pull_from_memcached($this->mc_settings, $topic_key);
-			if($topic_cached) {
-				$this->data_origin = 0;
-				if($this->opt_increase_impressions) {
-					$this->increase_impressions();
-					$topic_cached["impressions"] = $topic_cached["impressions"] + 1;
-					$this->push_to_memcached($this->mc_settings, $topic_key, $topic_cached);
-				}
-
-				// get recent topics
-				$topic_cached["recent_topics"] = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_recent_topics);
-
-				return $topic_cached;
-			}
-		}
-
-		// retrieve from database
+		// get topic properties ------------------------------------------------
 		$topic = $this->get_topic_properties();
 		if(!$topic) {
 			return false;
 		}
 
-		// create meta keywords from tags
-		$str_tags = $topic['tags'];
-		$a_tags = array();
-		$meta_keywords = '';
-		if($str_tags) {
-			$str_tags_len = mb_strlen($str_tags);
-			$a_tags = explode("|", mb_substr($str_tags, 1, $str_tags_len - 2));
-			$meta_keywords = implode(",", $a_tags) . ', ';
+		// increase impressions ------------------------------------------------
+		if($this->opt_increase_impressions) {
+			// increase impressions to display on topic page
+			$topic["impressions"] = $topic["impressions"] + 1;
+			// increase impressions in database
+			$this->increase_impressions();
+			// increase impressions in memcached
+			if($this->opt_use_memcached) {
+				$this->push_to_memcached($this->mc_settings, 'care_topic_' . $this->topic_id, $topic);
+			}
 		}
-		$topic["a_tags"] = $a_tags;
-		$topic["meta_keywords"] = $meta_keywords;
 
-		// get author name
+		// get author name -----------------------------------------------------
 		$topic_author = $this->get_topic_author($topic["author_id"]);
 		$topic["author_username"] = $topic_author["username"];
 		$topic["author_fullname"] = $topic_author["fullname"];
@@ -141,7 +116,7 @@ class topic_retrieve extends cms_common {
 		$topic["content_type_url"] = $content_type["url"];
 		$topic["content_type_title"] = $content_type["title"];
 
-		// get topic type
+		// get topic type ------------------------------------------------------
 		if(is_null($topic["topic_type_id"])) {
 			$topic_type = $this->get_topic_category($topic["topic_top_type_id"]);
 		} else {
@@ -150,30 +125,31 @@ class topic_retrieve extends cms_common {
 		$topic["topic_type_url"] = $topic_type["url"];
 		$topic["topic_type_title"] = $topic_type["title"];
 
-		// increase impressions
-		if($this->opt_increase_impressions) {
-			$this->increase_impressions();
-			$topic["impressions"] = $topic["impressions"] + 1;
+		// get recent topics ---------------------------------------------------
+		if($this->opt_show_recent_topics) {
+			$topic["recent_topics"] = $this->get_recent_topics($this->db_settings, $this->mc_settings, $this->max_recent_topics);
 		}
-
-		// push to memcached
-		if($this->opt_use_memcached) {
-			$topic["date_cached"] = $this->now('UTC');
-			$this->push_to_memcached($this->mc_settings, $topic_key, $topic);
-		}
-
-		// get recent topics
-		$topic["recent_topics"] = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_recent_topics);
 
 		return $topic;
 	}
 
 	/**
-	 * Get topic record (from database)
+	 * Get topic properties
 	 *
-	 * @return array|bool
+	 * @return array|bool topic record data or false (non existed or not published topic)
 	 */
 	public function get_topic_properties() {
+
+		$topic_key = 'care_topic_' . $this->topic_id;
+
+		// pull from memcached
+		if($this->opt_use_memcached) {
+			$topic = $this->pull_from_memcached($this->mc_settings, $topic_key);
+			if($topic) {
+				$this->data_origin = 'memcached';
+				return $topic;
+			}
+		}
 
 		$conn = $this->db_connect($this->db_settings);
 		$sql = 'SELECT * FROM topics t LEFT OUTER JOIN content c ON (t.content_id = c.id) ' .
@@ -181,7 +157,6 @@ class topic_retrieve extends cms_common {
 			'AND publish_status_id=' . TOPIC_STATUS_PUBLISHED . ' ' .
 			'AND date_published IS NOT null ' .
 			'AND date_published <= ' . "'" . $this->now('UTC') . "'";
-
 
 		/* Prepare statement */
 		$stmt = $conn->prepare($sql);
@@ -198,7 +173,7 @@ class topic_retrieve extends cms_common {
 		$rs = $res->fetch_all(MYSQLI_ASSOC);
 		if(count($rs) == 1) {
 			$topic=$rs[0];
-			$this->data_origin = 1;
+			$this->data_origin = 'database';
 			/* free result */
 			$stmt->free_result();
 		} else {
@@ -209,11 +184,42 @@ class topic_retrieve extends cms_common {
 		/* close statement */
 		$stmt->close();
 
+		// create meta keywords from tags
+		$str_tags = $topic['tags'];
+		$a_tags = array();
+		$meta_keywords = '';
+		if($str_tags) {
+			$str_tags_len = mb_strlen($str_tags);
+			$a_tags = explode("|", mb_substr($str_tags, 1, $str_tags_len - 2));
+			$meta_keywords = implode(",", $a_tags) . ', ';
+		}
+		$topic["a_tags"] = $a_tags;
+		$topic["meta_keywords"] = $meta_keywords;
+
+		// push to memcached
+		if($this->opt_use_memcached) {
+			$topic["date_cached"] = $this->now('UTC');
+			$this->push_to_memcached($this->mc_settings, $topic_key, $topic);
+		}
+
 		return $topic;
 	}
 
 	/**
-	 * Get topic author username, fullaname
+	 * Increase Topic Impressions
+	 */
+	public function increase_impressions() {
+
+		$conn = $this->db_connect($this->db_settings);
+		$sql = 'UPDATE topics SET impressions = impressions + 1 WHERE id=' . $this->topic_id;
+		if(!$conn->query($sql)) {
+			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
+			trigger_error($user_error, E_USER_ERROR);
+		}
+	}
+
+	/**
+	 * Get topic author (username, fullaname)
 	 *
 	 * @param int $author_id topic author_id
 	 * @return array (author id, username, fullaname)
@@ -224,9 +230,9 @@ class topic_retrieve extends cms_common {
 
 		// pull from memcached
 		if($this->opt_use_memcached) {
-			$val = $this->pull_from_memcached($this->mc_settings, $topic_author_key);
-			if($val) {
-				return $val;
+			$topic_author = $this->pull_from_memcached($this->mc_settings, $topic_author_key);
+			if($topic_author) {
+				return $topic_author;
 			}
 		}
 
@@ -265,9 +271,9 @@ class topic_retrieve extends cms_common {
 
 		// pull from memcached
 		if($this->opt_use_memcached) {
-			$val = $this->pull_from_memcached($this->mc_settings, $topic_category_key);
-			if($val) {
-				return $val;
+			$topic_category = $this->pull_from_memcached($this->mc_settings, $topic_category_key);
+			if($topic_category) {
+				return $topic_category;
 			}
 		}
 
@@ -281,7 +287,7 @@ class topic_retrieve extends cms_common {
 		} else {
 			$res_ctg->data_seek(0);
 			$cat = $res_ctg->fetch_array(MYSQLI_ASSOC);
-			$topic_category_title = mb_strtoupper(removeAccents($cat['category']));
+			$topic_category_title = mb_strtoupper($this->removeAccents($cat['category']));
 			$topic_category = array("id" => $cat_id, "url" => $cat['url'], "title" => $topic_category_title);
 			$res_ctg->free();
 		}
@@ -306,9 +312,9 @@ class topic_retrieve extends cms_common {
 
 		// pull from memcached
 		if($this->opt_use_memcached) {
-			$val = $this->pull_from_memcached($this->mc_settings, $topic_category_key);
-			if($val) {
-				return $val;
+			$topic_category = $this->pull_from_memcached($this->mc_settings, $topic_category_key);
+			if($topic_category) {
+				return $topic_category;
 			}
 		}
 
@@ -329,7 +335,7 @@ class topic_retrieve extends cms_common {
 			}
 			$current_cat_id = $cat['parent_b_id'];
 			$topic_category_url = $cat['url'];
-			$topic_category_title = mb_strtoupper(removeAccents($cat['category']));
+			$topic_category_title = mb_strtoupper($this->removeAccents($cat['category']));
 			$topic_category = array("id" => $cat_id, "url" => $topic_category_url, "title" => $topic_category_title);
 		};
 		$res_ctg->free();
@@ -343,27 +349,10 @@ class topic_retrieve extends cms_common {
 	}
 
 	/**
-	 * Increase Topic Impressions
-	 */
-	public function increase_impressions() {
-		$topic_id = $this->topic_id;
-		$conn = $this->db_connect($this->db_settings);
-		$sql = 'UPDATE topics SET impressions = impressions + 1 WHERE id=' . $topic_id;
-		if(!$conn->query($sql)) {
-			$user_error =  'Wrong SQL: ' . $sql . '<br>' . 'Error: ' . $conn->errno . ' ' . $conn->error;
-			trigger_error($user_error, E_USER_ERROR);
-		}
-	}
-
-	/**
 	 * Destructor
 	 */
 	public function __destruct() {
-
-		$conn = $this->db_connect($this->db_settings);
-		if($conn) {
-			$conn->close();
-		}
+		$this->db_disconnect();
 	}
 
 }

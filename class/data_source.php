@@ -66,6 +66,17 @@ class data_source extends app_common {
 	}
 
 	/**
+	 * Disconnect database (if connection has been established)
+	 */
+	public function db_disconnect() {
+		$conn = $this->conn;
+		if(!is_null($conn)) {
+			$conn->close;
+		}
+	}
+
+
+	/**
 	 * Initialize memcached and add server(s) to cache pool
 	 *
 	 * @param array $a_mc memcached settings

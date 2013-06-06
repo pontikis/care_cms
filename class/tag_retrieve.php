@@ -24,13 +24,14 @@ class tag_retrieve extends cms_common {
 	 */
 	public function __construct($a_db, $tag_url, $offset, $max_topics_per_page, $max_popular) {
 		// initialize
+		global $care_conf;
 		$this->db_settings = $a_db;
 		$this->tag_url = $tag_url;
 		$this->offset = $offset;
 		$this->max_topics_per_page = $max_topics_per_page;
 		$this->max_popular = $max_popular;
 
-		$this->opt_show_popular_topics = OPT_SHOW_POPULAR_TOPICS_PER_CATEGORY;
+		$this->opt_show_popular_topics = $care_conf['opt_show_popular_topics_with_tag'];
 	}
 
 	/**
@@ -43,9 +44,9 @@ class tag_retrieve extends cms_common {
 	}
 
 	/**
-	 * Get topic from topic id
+	 * Get tag
 	 *
-	 * @return array|bool post data or false
+	 * @return array tag data
 	 */
 	public function get_tag() {
 
@@ -66,7 +67,6 @@ class tag_retrieve extends cms_common {
 
 		return $tag;
 	}
-
 
 	/**
 	 * Get tag page topics (always from database)
@@ -139,11 +139,7 @@ class tag_retrieve extends cms_common {
 	 * Destructor
 	 */
 	public function __destruct() {
-
-		$conn = $this->db_connect($this->db_settings);
-		if($conn) {
-			$conn->close();
-		}
+		$this->db_disconnect();
 	}
 
 }
