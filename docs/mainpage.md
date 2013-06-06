@@ -19,6 +19,3 @@ The following classes are documented:
 - [tag_retrieve class](@ref tag_retrieve) (tag operations)
 - [member_retrieve class](@ref member_retrieve) (member operations)
 
-There are (still) some functions used outside classes (will be deprecated soon):
-
-- [various utility functions](@ref utils.php)
