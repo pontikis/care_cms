@@ -1,13 +1,12 @@
 <map id="now" name="now">
-<area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="560,297,704,339"/>
-<area shape="rect" id="node3" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="101,239,293,266"/>
-<area shape="rect" id="node7" href="$d1/db6/classmember__retrieve.html#acb58d3b1e5205c5fe5bef05d8947d7b3" title="member_retrieve\\get\l_member" alt="" coords="561,7,703,48"/>
-<area shape="rect" id="node11" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="365,415,488,456"/>
-<area shape="rect" id="node12" href="$d7/d90/classtopic__retrieve.html#a5b9f6d385ee97a8e8a0fb4d20b871281" title="topic_retrieve\\get\l_topic_properties" alt="" coords="136,415,259,456"/>
-<area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="349,232,505,273"/>
-<area shape="rect" id="node5" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="341,297,512,339"/>
-<area shape="rect" id="node6" href="$d1/db6/classmember__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="member_retrieve\\get\l_category_popular_topics" alt="" coords="341,36,512,77"/>
-<area shape="rect" id="node8" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="358,101,495,143"/>
-<area shape="rect" id="node10" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="358,167,495,208"/>
-<area shape="rect" id="node9" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="563,142,701,169"/>
+<area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="560,28,704,69"/>
+<area shape="rect" id="node3" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="101,166,293,192"/>
+<area shape="rect" id="node11" href="$d7/d90/classtopic__retrieve.html#a5b9f6d385ee97a8e8a0fb4d20b871281" title="topic_retrieve\\get\l_topic_properties" alt="" coords="136,282,259,324"/>
+<area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="349,28,505,69"/>
+<area shape="rect" id="node5" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="341,93,512,134"/>
+<area shape="rect" id="node6" href="$d2/d6a/classcms__common.html#ac2891e57af4412c3bb51eac5c4c99b23" title="cms_common\\get_recent\l_topics" alt="" coords="342,289,511,330"/>
+<area shape="rect" id="node8" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="358,158,495,200"/>
+<area shape="rect" id="node10" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="358,224,495,265"/>
+<area shape="rect" id="node7" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="571,318,693,360"/>
+<area shape="rect" id="node9" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="563,198,701,224"/>
 </map>

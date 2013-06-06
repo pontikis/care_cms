@@ -38,7 +38,6 @@
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
-      <li><a href="../../globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <div id="nav-path" class="navpath">
@@ -62,7 +61,7 @@
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="comment">// pull from memcached</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">if</span>(!is_null($a_mc) &amp;&amp; !is_null($a_criteria[<span class="stringliteral">&quot;memcached_key&quot;</span>])) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            $a_topics_cached = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($this-&gt;mc_settings, $a_criteria[<span class="stringliteral">&quot;memcached_key&quot;</span>]);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            $a_topics_cached = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($a_mc, $a_criteria[<span class="stringliteral">&quot;memcached_key&quot;</span>]);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordflow">if</span>($a_topics_cached) {</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                <span class="keywordflow">return</span> $a_topics_cached;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            }</div>
@@ -128,7 +127,7 @@
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        $rs = <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;query($sql);</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">if</span>($rs === <span class="keyword">false</span>) {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            $user_error =  <span class="stringliteral">&#39;Wrong SQL: &#39;</span> . $sql . <span class="stringliteral">&#39;&lt;br&gt;&#39;</span> . <span class="stringliteral">&#39;Error: &#39;</span> . <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;errno . <span class="charliteral">&#39; &#39;</span> . <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;error;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            $user_error = <span class="stringliteral">&#39;Wrong SQL: &#39;</span> . $sql . <span class="stringliteral">&#39;&lt;br&gt;&#39;</span> . <span class="stringliteral">&#39;Error: &#39;</span> . <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;errno . <span class="charliteral">&#39; &#39;</span> . <a class="code" href="../../d5/d37/classdata__source.html#aa8a5a87b9c1a6a0819b88447cbe41877">$conn</a>-&gt;error;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            trigger_error($user_error, E_USER_ERROR);</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        }</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        $rs-&gt;data_seek(0);</div>
@@ -166,11 +165,35 @@
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    }</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;}</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00168"></a><span class="lineno"><a class="code" href="../../d2/d6a/classcms__common.html#ac2891e57af4412c3bb51eac5c4c99b23">  168</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d2/d6a/classcms__common.html#ac2891e57af4412c3bb51eac5c4c99b23">get_recent_topics</a>($a_db, $a_mc, $max_recent) {</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        $a_recent_topics = array(</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <span class="stringliteral">&quot;extra_columns_topics&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            <span class="stringliteral">&quot;extra_columns_content&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            <span class="stringliteral">&quot;publish_status&quot;</span> =&gt; TOPIC_STATUS_PUBLISHED,</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="stringliteral">&quot;date_from&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <span class="stringliteral">&quot;date_until&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            <span class="stringliteral">&quot;with_content_type&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="stringliteral">&quot;with_topic_type&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            <span class="stringliteral">&quot;with_topic_type_in&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="stringliteral">&quot;topic_type_column&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="stringliteral">&quot;with_tag&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="stringliteral">&quot;by_author&quot;</span> =&gt; null,</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <span class="stringliteral">&quot;order_by&quot;</span> =&gt; <span class="stringliteral">&quot;date_published&quot;</span>,</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            <span class="stringliteral">&quot;sort_order&quot;</span> =&gt; <span class="stringliteral">&quot;DESC&quot;</span>,</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <span class="stringliteral">&quot;offset&quot;</span> =&gt; 0,</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            <span class="stringliteral">&quot;rows_to_return&quot;</span> =&gt; $max_recent,</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            <span class="stringliteral">&quot;memcached_key&quot;</span> =&gt; <span class="stringliteral">&quot;care_recent_topics&quot;</span>,</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;            <span class="stringliteral">&quot;count_only&quot;</span> =&gt; <span class="keyword">false</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        );</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordflow">return</span> $this-&gt;<a class="code" href="../../d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891">get_topics_list</a>($a_db, $a_mc, $a_recent_topics);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 3 2013 22:18:45 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 6 2013 21:34:25 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>
