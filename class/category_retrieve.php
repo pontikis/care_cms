@@ -279,31 +279,25 @@ class category_retrieve extends cms_common {
 	 * @return array page topics (title, url, date_published, impressions, comments, ctg_intro, ctg_image)
 	 */
 	private function get_category_page_topics($category) {
-		$a_category_page_topics = array(
+		$a_category_page_topics_criteria = array(
 			"extra_columns_topics" => array("date_published", "impressions", "comments"),
 			"extra_columns_content" => array("ctg_image", "ctg_intro"),
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
 			"with_content_type" => ($category["ctg_type"] == 1 ? $category["id"] : null),
 			"with_topic_type" => ($category["ctg_type"] == 2 ? $category["id"] : null),
-			"with_topic_type_in" => null,
 			"topic_type_column" => (in_array($category["id"], array(1, 4)) ? 'topic_top_type_id' : 'topic_type_id'),
-			"with_tag" => null,
-			"by_author" => null,
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
 			"rows_to_return" => $this->max_topics_per_page,
-			"memcached_key" => null,
 			"count_only" => true
 		);
-		$total_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics);
+		$total_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics_criteria);
 
 		$page_topics = array();
 		if($total_topics > 0) {
-			$a_category_page_topics["count_only"] = false;
-			$page_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics);
+			$a_category_page_topics_criteria["count_only"] = false;
+			$page_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics_criteria);
 		}
 
 		return array("total_topics" => $total_topics, "page_topics" => $page_topics);
@@ -407,23 +401,16 @@ class category_retrieve extends cms_common {
 	 */
 	public function get_category_popular_topics($category) {
 
-		$a_category_popular_topics = array(
+		$a_category_popular_topics_criteria = array(
 			"extra_columns_topics" => array("impressions"),
-			"extra_columns_content" => null,
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
 			"with_content_type" => ($category["ctg_type"] == 1 ? $category["id"] : null),
 			"with_topic_type" => ($category["ctg_type"] == 2 ? $category["id"] : null),
-			"with_topic_type_in" => null,
 			"topic_type_column" => (in_array($category["id"], array(1, 4)) ? 'topic_top_type_id' : 'topic_type_id'),
-			"with_tag" => null,
-			"by_author" => null,
 			"order_by" => "impressions",
 			"sort_order" => "DESC",
 			"offset" => 0,
 			"rows_to_return" => $this->max_popular,
-			"memcached_key" => null,
 			"count_only" => false
 		);
 
@@ -432,12 +419,12 @@ class category_retrieve extends cms_common {
 			if(count($a_sub_ctgs) == 0) {
 				return array();
 			} else {
-				$a_category_popular_topics["with_topic_type"] = null;
-				$a_category_popular_topics["with_topic_type_in"] = $category["ctg_type"] == 2 ? $a_sub_ctgs : null;
+				$a_category_popular_topics_criteria["with_topic_type"] = null;
+				$a_category_popular_topics_criteria["with_topic_type_in"] = $category["ctg_type"] == 2 ? $a_sub_ctgs : null;
 			}
 		}
 
-		return $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_popular_topics);
+		return $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_popular_topics_criteria);
 	}
 
 	/**

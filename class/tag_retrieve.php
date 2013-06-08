@@ -74,31 +74,23 @@ class tag_retrieve extends cms_common {
 	 * @return array
 	 */
 	private function get_tag_page_topics() {
-		$a_page_topics_with_tag = array(
+		$a_page_topics_with_tag_criteria = array(
 			"extra_columns_topics" => array("date_published", "impressions", "comments"),
 			"extra_columns_content" => array("ctg_image", "ctg_intro"),
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
-			"with_content_type" => null,
-			"with_topic_type" => null,
-			"with_topic_type_in" => null,
-			"topic_type_column" => null,
 			"with_tag" => $this->tag_url,
-			"by_author" => null,
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
 			"rows_to_return" => $this->max_topics_per_page,
-			"memcached_key" => null,
 			"count_only" => true
 		);
-		$total_topics = $this->get_topics_list($this->db_settings, null, $a_page_topics_with_tag);
+		$total_topics = $this->get_topics_list($this->db_settings, null, $a_page_topics_with_tag_criteria);
 
 		$page_topics = array();
 		if($total_topics > 0) {
-			$a_page_topics_with_tag["count_only"] = false;
-			$page_topics = $this->get_topics_list($this->db_settings, null, $a_page_topics_with_tag);
+			$a_page_topics_with_tag_criteria["count_only"] = false;
+			$page_topics = $this->get_topics_list($this->db_settings, null, $a_page_topics_with_tag_criteria);
 		}
 
 		return array("total_topics" => $total_topics, "page_topics" => $page_topics);
@@ -112,27 +104,18 @@ class tag_retrieve extends cms_common {
 	 */
 	public function get_tag_popular_topics() {
 
-		$a_popular_topics_with_tag = array(
+		$a_popular_topics_with_tag_criteria = array(
 			"extra_columns_topics" => array("impressions"),
-			"extra_columns_content" => null,
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
-			"with_content_type" => null,
-			"with_topic_type" => null,
-			"with_topic_type_in" => null,
-			"topic_type_column" => null,
 			"with_tag" => $this->tag_url,
-			"by_author" => null,
 			"order_by" => "impressions",
 			"sort_order" => "DESC",
 			"offset" => 0,
 			"rows_to_return" => $this->max_popular,
-			"memcached_key" => null,
 			"count_only" => false
 		);
 
-		return $this->get_topics_list($this->db_settings, null, $a_popular_topics_with_tag);
+		return $this->get_topics_list($this->db_settings, null, $a_popular_topics_with_tag_criteria);
 	}
 
 	/**

@@ -35,6 +35,7 @@ class cms_common extends data_source {
 	 *     "with_topic_type" => int, (ctg_id or null)
 	 *     "with_topic_type_in" => array(id1,id2,id3), (array of IDs or null)
 	 *     "topic_type_column" => "topic_type_id", (topic_type_id/topic_top_type_id or null)
+	 *     "exclude_news" => bool, (false/true)
 	 *     "with_tag" => "tag_name", (or null)
 	 *     "by_author" => int,  author_is or null
 	 *     "order_by" => "order_column", (date_published/impressions or null)
@@ -50,8 +51,13 @@ class cms_common extends data_source {
 	 */
 	public function get_topics_list($a_db, $a_mc, $a_criteria) {
 
+		$use_memcached = !is_null($a_mc) &&
+			array_key_exists('memcached_key', $a_criteria) &&
+			!is_null($a_criteria["memcached_key"]) &&
+			strlen($a_criteria["memcached_key"]) > 0;
+
 		// pull from memcached
-		if(!is_null($a_mc) && !is_null($a_criteria["memcached_key"])) {
+		if($use_memcached) {
 			$a_topics_cached = $this->pull_from_memcached($a_mc, $a_criteria["memcached_key"]);
 			if($a_topics_cached) {
 				return $a_topics_cached;
@@ -61,14 +67,16 @@ class cms_common extends data_source {
 		// retrieve from database
 		$conn = $this->db_connect($a_db);
 
-		if(is_null($a_criteria["extra_columns_topics"])) {
+		$count_only = array_key_exists('count_only', $a_criteria) && !is_null($a_criteria["count_only"]) && $a_criteria["count_only"];
+
+		if(!array_key_exists('extra_columns_topics', $a_criteria) || is_null($a_criteria["extra_columns_topics"]) || !is_array($a_criteria["extra_columns_topics"])) {
 			$a_criteria["extra_columns_topics"] = array();
 		}
-		if(is_null($a_criteria["extra_columns_content"])) {
+		if(!array_key_exists('extra_columns_content', $a_criteria) || is_null($a_criteria["extra_columns_content"]) || !is_array($a_criteria["extra_columns_content"])) {
 			$a_criteria["extra_columns_content"] = array();
 		}
 
-		if($a_criteria["count_only"]) {
+		if($count_only) {
 			$selectSQL = 'SELECT count(id) as topics_count FROM topics ';
 		} else {
 			$a_topics = array();
@@ -97,20 +105,37 @@ class cms_common extends data_source {
 
 		$whereSQL = 'WHERE publish_status_id=' . TOPIC_STATUS_PUBLISHED . ' AND date_published IS NOT null ' .
 			'AND publish_status_id=' . $a_criteria["publish_status"] . ' ' .
-			'AND date_published <= ' . "'" . (is_null($a_criteria["date_until"]) ? $this->now('UTC') : $a_criteria["date_until"]) . "' " .
-			(is_null($a_criteria["date_from"]) ? '' : 'AND date_published >= ' . "'" . $a_criteria["date_from"] . "' ") .
-			(is_null($a_criteria["with_content_type"]) ? '' : 'AND content_type_id=' . $a_criteria["with_content_type"] . ' ') .
-			(is_null($a_criteria["with_topic_type"]) ? '' : 'AND ' . $a_criteria["topic_type_column"] . '=' . $a_criteria["with_topic_type"] . ' ') .
-			((is_null($a_criteria["with_topic_type_in"]) || count($a_criteria["with_topic_type_in"]) == 0) ? '' : 'AND ' . $a_criteria["topic_type_column"] . ' IN (' . implode(",", $a_criteria["with_topic_type_in"]) . ') ') .
-			(is_null($a_criteria["with_tag"]) ? '' : 'AND tags LIKE ' . "'%|" . $conn->real_escape_string($a_criteria["with_tag"]) . "|%'" . ' ') .
-			(is_null($a_criteria["by_author"]) ? '' : 'AND author_id=' . $a_criteria["by_author"] . ' ');
+			'AND date_published <= ' . "'" . (is_null($a_criteria["date_until"]) ? $this->now('UTC') : $a_criteria["date_until"]) . "' ";
+		if(array_key_exists('date_from', $a_criteria) && !is_null($a_criteria["date_from"])) {
+			$whereSQL .= 'AND date_published >= ' . "'" . $a_criteria["date_from"] . "' ";
+		}
+		if(array_key_exists('with_content_type', $a_criteria) && !is_null($a_criteria["with_content_type"])) {
+			$whereSQL .= 'AND content_type_id=' . $a_criteria["with_content_type"] . ' ';
+		}
+		if(array_key_exists('with_topic_type', $a_criteria) && !is_null($a_criteria["with_topic_type"])) {
+			$whereSQL .= 'AND ' . $a_criteria["topic_type_column"] . '=' . $a_criteria["with_topic_type"] . ' ';
+		}
+		if(array_key_exists('with_topic_type_in', $a_criteria) && !is_null($a_criteria["with_topic_type_in"]) && count($a_criteria["with_topic_type_in"]) > 0
+			&& array_key_exists('topic_type_column', $a_criteria) && !is_null($a_criteria["topic_type_column"])
+		) {
+			$whereSQL .= 'AND ' . $a_criteria["topic_type_column"] . ' IN (' . implode(",", $a_criteria["with_topic_type_in"]) . ') ';
+		}
+		if(array_key_exists('with_tag', $a_criteria) && !is_null($a_criteria["with_tag"])) {
+			$whereSQL .= 'AND tags LIKE ' . "'%|" . $conn->real_escape_string($a_criteria["with_tag"]) . "|%'" . ' ';
+		}
+		if(array_key_exists('by_author', $a_criteria) && !is_null($a_criteria["by_author"]) && $this->is_positive_integer($a_criteria["by_author"])) {
+			$whereSQL .= 'AND author_id=' . $a_criteria["by_author"] . ' ';
+		}
+		if(array_key_exists('exclude_news', $a_criteria) && !is_null($a_criteria["exclude_news"]) && $a_criteria["exclude_news"]) {
+			$whereSQL .= 'AND (topic_type_id NOT IN (11,12) OR topic_type_id IS NULL) '; // 11 = news_hellas 12 = news_world
+		}
 
 		if(!$a_criteria["count_only"]) {
 			$orderSQL = 'ORDER BY ' . $a_criteria["order_by"] . ' ' . $a_criteria["sort_order"] . ' ';
 			$limitSQL = 'LIMIT ' . $a_criteria["offset"] . ',' . $a_criteria["rows_to_return"];
 		}
 
-		if($a_criteria["count_only"]) {
+		if($count_only) {
 			$sql = $selectSQL . $whereSQL;
 		} else {
 			$sql = $selectSQL . $whereSQL . $orderSQL . $limitSQL;
@@ -123,7 +148,7 @@ class cms_common extends data_source {
 		}
 		$rs->data_seek(0);
 
-		if($a_criteria["count_only"]) {
+		if($count_only) {
 			$topics = $rs->fetch_array(MYSQLI_ASSOC);
 			$total_topics = $topics['topics_count'];
 		} else {
@@ -144,11 +169,11 @@ class cms_common extends data_source {
 		$rs->free();
 
 		// push to memcached
-		if(!is_null($a_mc) && !is_null($a_criteria["memcached_key"])) {
+		if($use_memcached) {
 			$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
 		}
 
-		if($a_criteria["count_only"]) {
+		if($count_only) {
 			return $total_topics;
 		} else {
 			return $a_topics;
@@ -166,18 +191,8 @@ class cms_common extends data_source {
 	 * @return array recent topics array
 	 */
 	public function get_recent_topics($a_db, $a_mc, $max_recent) {
-		$a_recent_topics = array(
-			"extra_columns_topics" => null,
-			"extra_columns_content" => null,
+		$a_recent_topics_criteria = array(
 			"publish_status" => TOPIC_STATUS_PUBLISHED,
-			"date_from" => null,
-			"date_until" => null,
-			"with_content_type" => null,
-			"with_topic_type" => null,
-			"with_topic_type_in" => null,
-			"topic_type_column" => null,
-			"with_tag" => null,
-			"by_author" => null,
 			"order_by" => "date_published",
 			"sort_order" => "DESC",
 			"offset" => 0,
@@ -185,7 +200,7 @@ class cms_common extends data_source {
 			"memcached_key" => "care_recent_topics",
 			"count_only" => false
 		);
-		return $this->get_topics_list($a_db, $a_mc, $a_recent_topics);
+		return $this->get_topics_list($a_db, $a_mc, $a_recent_topics_criteria);
 	}
 
 }
