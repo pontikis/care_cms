@@ -2,9 +2,12 @@
 <area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="167,5,323,46"/>
 <area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="160,70,331,111"/>
 <area shape="rect" id="node5" href="$d2/d6a/classcms__common.html#ac2891e57af4412c3bb51eac5c4c99b23" title="get_recent_topics" alt="" coords="183,136,308,163"/>
-<area shape="rect" id="node7" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="177,187,314,229"/>
-<area shape="rect" id="node9" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="177,253,314,294"/>
+<area shape="rect" id="node7" href="$d1/db6/classmember__retrieve.html#af21c19041697820c6c6403e0f94a29ea" title="member_retrieve\\get\l_member_topics_count" alt="" coords="167,187,324,229"/>
+<area shape="rect" id="node9" href="$d1/db6/classmember__retrieve.html#a5cbb1ccdbf217dfd447cb231b5396234" title="member_retrieve\\get\l_member_recent_topics" alt="" coords="165,253,326,294"/>
+<area shape="rect" id="node10" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="177,318,314,359"/>
+<area shape="rect" id="node12" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="177,383,314,425"/>
 <area shape="rect" id="node3" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="379,34,523,75"/>
 <area shape="rect" id="node6" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="389,129,512,170"/>
-<area shape="rect" id="node8" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="382,227,519,253"/>
+<area shape="rect" id="node8" href="$d1/db6/classmember__retrieve.html#acb58d3b1e5205c5fe5bef05d8947d7b3" title="member_retrieve\\get\l_member" alt="" coords="380,223,521,265"/>
+<area shape="rect" id="node11" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="382,357,519,384"/>
 </map>

@@ -13,7 +13,7 @@ Class app_common
 Class data_source
 -----------------
 
-- Database connection functionality (data_source::db_connect data_source::db_disconnect)
+- Database connection functionality. Currently only mysqli is supported (data_source::db_connect data_source::db_disconnect)
 - Memcached functionality (data_source::mc_init data_source::pull_from_memcached data_source::push_to_memcached)
 
 Class cms_common
