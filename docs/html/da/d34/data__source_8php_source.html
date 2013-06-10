@@ -123,18 +123,18 @@
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">return</span> $val;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">  144</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($a_mc, $key, $val) {</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc);</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">if</span>(!is_null(<a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>)) {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;set($key, $val);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        }</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    }</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">  145</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">push_to_memcached</a>($a_mc, $key, $val, $exp = 0) {</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a> = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">mc_init</a>($a_mc);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">if</span>(!is_null(<a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>)) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <a class="code" href="../../d5/d37/classdata__source.html#ae5fb815e2f64eabb852aeec1c12f8822">$mc</a>-&gt;set($key, $val, $exp);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        }</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    }</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 8 2013 11:08:13 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 10 2013 15:37:03 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

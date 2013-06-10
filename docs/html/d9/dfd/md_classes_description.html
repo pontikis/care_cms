@@ -52,7 +52,7 @@
 <h2>Class <a class="el" href="../../d5/d37/classdata__source.html">data_source</a></h2>
 <ul>
 <li>Database connection functionality. Currently only mysqli is supported (<a class="el" href="../../d5/d37/classdata__source.html#aa06d3588126ba2b8eaaeaa518304406d">data_source::db_connect</a> <a class="el" href="../../d5/d37/classdata__source.html#ad0f574cee923cdcf4b555f7fd35fc1f7">data_source::db_disconnect</a>)</li>
-<li>Memcached functionality (<a class="el" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">data_source::mc_init</a> <a class="el" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">data_source::pull_from_memcached</a> <a class="el" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">data_source::push_to_memcached</a>)</li>
+<li>Memcached functionality (<a class="el" href="../../d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6">data_source::mc_init</a> <a class="el" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">data_source::pull_from_memcached</a> <a class="el" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">data_source::push_to_memcached</a>)</li>
 </ul>
 <h2>Class <a class="el" href="../../d2/d6a/classcms__common.html">cms_common</a></h2>
 <p>Common CMS functionality</p>
@@ -62,26 +62,30 @@
 </ul>
 <h2>Class <a class="el" href="../../d7/d90/classtopic__retrieve.html">topic_retrieve</a></h2>
 <ul>
-<li><a class="el" href="../../d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23">topic_retrieve::get_topic</a> creates and returns an array with all data needed for post page (<a href="http://www.care.gr/post-id/post-url">http://www.care.gr/post-id/post-url</a>)</li>
+<li><a class="el" href="../../d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23">topic_retrieve::get_topic</a> creates and returns an array with all data needed for post page (http://www.care.gr/post/post-id/post-url)</li>
 </ul>
 <h2>Class <a class="el" href="../../d9/d11/classcategory__retrieve.html">category_retrieve</a></h2>
 <ul>
-<li><a class="el" href="../../d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7">category_retrieve::get_category</a> creates and returns an array with all data needed for category page (<a href="http://www.care.gr/category-url">http://www.care.gr/category-url</a>)</li>
+<li><a class="el" href="../../d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7">category_retrieve::get_category</a> creates and returns an array with all data needed for category page (http://www.care.gr/category/category-url)</li>
 </ul>
 <h2>Class <a class="el" href="../../df/d8a/classtag__retrieve.html">tag_retrieve</a></h2>
 <ul>
-<li><a class="el" href="../../df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917">tag_retrieve::get_tag</a> creates and returns an array with all data needed for tag page (<a href="http://www.care.gr/tag-url">http://www.care.gr/tag-url</a>)</li>
+<li><a class="el" href="../../df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917">tag_retrieve::get_tag</a> creates and returns an array with all data needed for tag page (http://www.care.gr/tag/tag-url)</li>
 </ul>
 <h2>Class <a class="el" href="../../d1/db6/classmember__retrieve.html">member_retrieve</a></h2>
 <ul>
-<li><a class="el" href="../../d1/db6/classmember__retrieve.html#acb58d3b1e5205c5fe5bef05d8947d7b3">member_retrieve::get_member</a> creates and returns an array with all data needed for post page (<a href="http://www.care.gr/member-url">http://www.care.gr/member-url</a>)</li>
-<li>member_retrieve::get_member_bookmarks_page creates and returns an array with all data needed for member bookmarks page (<a href="http://www.care.gr/bookmarks/member-url">http://www.care.gr/bookmarks/member-url</a>)</li>
-<li>member_retrieve::get_member_topics_page creates and returns an array with all data needed for member topics page (<a href="http://www.care.gr/posts/member-url">http://www.care.gr/posts/member-url</a>) </li>
+<li><a class="el" href="../../d1/db6/classmember__retrieve.html#acb58d3b1e5205c5fe5bef05d8947d7b3">member_retrieve::get_member</a> creates and returns an array with all data needed for post page (http://www.care.gr/member-url)</li>
+<li><a class="el" href="../../d1/db6/classmember__retrieve.html#a3c2fbb67f5d34922202184c7751213f0">member_retrieve::get_member_page_topics</a> creates and returns an array with member topics page (http://www.care.gr/member-url/posts)</li>
+<li><a class="el" href="../../d1/db6/classmember__retrieve.html#a882fbe772e9c5231595a6b2a4d594fb8">member_retrieve::get_member_page_bookmarks</a> creates and returns an array with member bookmarks page (http://www.care.gr/member-url/bookmarks)</li>
+</ul>
+<h2>Class <a class="el" href="../../df/d8a/classsite__search.html">site_search</a></h2>
+<ul>
+<li><a class="el" href="../../df/d8a/classsite__search.html#a8621e11cbe705abaf5a43335307a7d41">site_search::quick_search</a> creates json for jquery-ui autocomplete search box </li>
 </ul>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 8 2013 11:08:13 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 10 2013 15:37:03 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

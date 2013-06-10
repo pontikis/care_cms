@@ -26,22 +26,26 @@ Common CMS functionality
 Class topic_retrieve
 -----------------
 
-- topic_retrieve::get_topic creates and returns an array with all data needed for post page (http://www.care.gr/post-id/post-url)
+- topic_retrieve::get_topic creates and returns an array with all data needed for post page (%http://www.care.gr/post/post-id/post-url)
 
 Class category_retrieve
 -----------------
 
-- category_retrieve::get_category creates and returns an array with all data needed for category page (http://www.care.gr/category-url)
+- category_retrieve::get_category creates and returns an array with all data needed for category page (%http://www.care.gr/category/category-url)
 
 Class tag_retrieve
 -----------------
 
-- tag_retrieve::get_tag creates and returns an array with all data needed for tag page (http://www.care.gr/tag-url)
+- tag_retrieve::get_tag creates and returns an array with all data needed for tag page (%http://www.care.gr/tag/tag-url)
 
 Class member_retrieve
 -----------------
 
-- member_retrieve::get_member creates and returns an array with all data needed for post page (http://www.care.gr/member-url)
-- member_retrieve::get_member_bookmarks_page creates and returns an array with all data needed for member bookmarks page (http://www.care.gr/bookmarks/member-url)
-- member_retrieve::get_member_topics_page creates and returns an array with all data needed for member topics page (http://www.care.gr/posts/member-url)
+- member_retrieve::get_member creates and returns an array with all data needed for post page (%http://www.care.gr/member-url)
+- member_retrieve::get_member_page_topics creates and returns an array with member topics page (%http://www.care.gr/member-url/posts)
+- member_retrieve::get_member_page_bookmarks creates and returns an array with member bookmarks page (%http://www.care.gr/member-url/bookmarks)
 
+Class site_search
+-----------------
+
+- site_search::quick_search creates json for jquery-ui autocomplete search box

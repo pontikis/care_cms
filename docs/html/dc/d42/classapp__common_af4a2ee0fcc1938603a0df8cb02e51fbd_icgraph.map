@@ -1,16 +1,21 @@
 <map id="now" name="now">
-<area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="560,478,704,519"/>
-<area shape="rect" id="node3" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="101,260,293,287"/>
-<area shape="rect" id="node14" href="$d1/db6/classmember__retrieve.html#a21c3269cec89bc80cb16e1d4bb4b2d42" title="member_retrieve\\get\l_member_properties" alt="" coords="127,129,268,170"/>
-<area shape="rect" id="node15" href="$d7/d90/classtopic__retrieve.html#a5b9f6d385ee97a8e8a0fb4d20b871281" title="topic_retrieve\\get\l_topic_properties" alt="" coords="136,5,259,46"/>
-<area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="349,413,505,454"/>
-<area shape="rect" id="node5" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="341,478,512,519"/>
-<area shape="rect" id="node6" href="$d2/d6a/classcms__common.html#ac2891e57af4412c3bb51eac5c4c99b23" title="cms_common\\get_recent\l_topics" alt="" coords="342,34,511,75"/>
-<area shape="rect" id="node8" href="$d1/db6/classmember__retrieve.html#af21c19041697820c6c6403e0f94a29ea" title="member_retrieve\\get\l_member_topics_count" alt="" coords="348,217,505,258"/>
-<area shape="rect" id="node10" href="$d1/db6/classmember__retrieve.html#a5cbb1ccdbf217dfd447cb231b5396234" title="member_retrieve\\get\l_member_recent_topics" alt="" coords="346,151,507,193"/>
-<area shape="rect" id="node11" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="358,347,495,389"/>
-<area shape="rect" id="node13" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="358,282,495,323"/>
-<area shape="rect" id="node7" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="571,5,693,46"/>
-<area shape="rect" id="node9" href="$d1/db6/classmember__retrieve.html#acb58d3b1e5205c5fe5bef05d8947d7b3" title="member_retrieve\\get\l_member" alt="" coords="561,151,703,193"/>
-<area shape="rect" id="node12" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="563,323,701,349"/>
+<area shape="rect" id="node2" href="$d9/d11/classcategory__retrieve.html#abc42e274a3ce344ea3f945b24b27e2a7" title="category_retrieve\\get\l_category" alt="" coords="560,698,704,739"/>
+<area shape="rect" id="node3" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="101,379,293,405"/>
+<area shape="rect" id="node18" href="$d1/db6/classmember__retrieve.html#a21c3269cec89bc80cb16e1d4bb4b2d42" title="member_retrieve\\get\l_member_properties" alt="" coords="127,14,268,55"/>
+<area shape="rect" id="node19" href="$df/d8a/classsite__search.html#a8621e11cbe705abaf5a43335307a7d41" title="site_search\\quick_search" alt="" coords="112,429,283,456"/>
+<area shape="rect" id="node20" href="$d7/d90/classtopic__retrieve.html#a5b9f6d385ee97a8e8a0fb4d20b871281" title="topic_retrieve\\get\l_topic_properties" alt="" coords="136,157,259,198"/>
+<area shape="rect" id="node4" href="$d9/d11/classcategory__retrieve.html#a389a9a3b8ed2241719e919a97f5c3958" title="category_retrieve\\get\l_category_topics_count" alt="" coords="347,665,507,706"/>
+<area shape="rect" id="node5" href="$d9/d11/classcategory__retrieve.html#a956b127adf47b01c3488de100ddfe099" title="category_retrieve\\get\l_category_page_topics" alt="" coords="349,730,505,771"/>
+<area shape="rect" id="node6" href="$d9/d11/classcategory__retrieve.html#a56813a5f6f55d8de9e93afb82f371bc4" title="category_retrieve\\get\l_category_popular_topics" alt="" coords="341,599,512,641"/>
+<area shape="rect" id="node7" href="$d2/d6a/classcms__common.html#ac2891e57af4412c3bb51eac5c4c99b23" title="cms_common\\get_recent\l_topics" alt="" coords="342,338,511,379"/>
+<area shape="rect" id="node9" href="$d1/db6/classmember__retrieve.html#af21c19041697820c6c6403e0f94a29ea" title="member_retrieve\\get\l_member_topics_count" alt="" coords="348,77,505,118"/>
+<area shape="rect" id="node11" href="$d1/db6/classmember__retrieve.html#a5cbb1ccdbf217dfd447cb231b5396234" title="member_retrieve\\get\l_member_recent_topics" alt="" coords="346,142,507,183"/>
+<area shape="rect" id="node12" href="$d1/db6/classmember__retrieve.html#a3c2fbb67f5d34922202184c7751213f0" title="member_retrieve\\get\l_member_page_topics" alt="" coords="350,207,503,249"/>
+<area shape="rect" id="node13" href="$d1/db6/classmember__retrieve.html#a0c97a67459d17e0f63fc4dea2fdd9f00" title="member_retrieve\\get\l_member_popular_topics" alt="" coords="343,273,510,314"/>
+<area shape="rect" id="node14" href="$df/d8a/classtag__retrieve.html#a355ef0ba8086ec0b70365e14e06460d5" title="tag_retrieve\\get_tag\l_topics_count" alt="" coords="358,469,495,510"/>
+<area shape="rect" id="node16" href="$df/d8a/classtag__retrieve.html#aef2db811140360568bac8a4ad705bd59" title="tag_retrieve\\get_tag\l_page_topics" alt="" coords="358,534,495,575"/>
+<area shape="rect" id="node17" href="$df/d8a/classtag__retrieve.html#a77f46deddd1ffa579084f3d39ca0774f" title="tag_retrieve\\get_tag\l_popular_topics" alt="" coords="358,403,495,445"/>
+<area shape="rect" id="node8" href="$d7/d90/classtopic__retrieve.html#a16ed69845725ffdf64bcd3336dd11d23" title="topic_retrieve\\get\l_topic" alt="" coords="571,241,693,282"/>
+<area shape="rect" id="node10" href="$d1/db6/classmember__retrieve.html#acb58d3b1e5205c5fe5bef05d8947d7b3" title="member_retrieve\\get\l_member" alt="" coords="561,77,703,118"/>
+<area shape="rect" id="node15" href="$df/d8a/classtag__retrieve.html#af5df41d5de1e36f5a2da10e13b9f1917" title="tag_retrieve\\get_tag" alt="" coords="563,476,701,503"/>
 </map>

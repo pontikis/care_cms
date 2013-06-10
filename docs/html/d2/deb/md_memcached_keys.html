@@ -73,8 +73,27 @@
 <li>category toc (hierarchical view only) as html</li>
 <li>category subcategories (hierarchical view only)</li>
 </ul>
+<div class="fragment"><div class="line">$category_topics_count_key = <span class="stringliteral">&#39;care_category_topics_count_&#39;</span> . $category_id;</div>
+</div><!-- fragment --><p>It holds an integer:</p>
+<ul>
+<li>category topics count (only for list_mode = 1)</li>
+</ul>
+<div class="fragment"><div class="line">$popular_in_category_key = <span class="stringliteral">&#39;care_popular_in_category_&#39;</span> . sha1($this-&gt;category_url);</div>
+</div><!-- fragment --><p>It holds an array with:</p>
+<ul>
+<li>popular topics in category. Expiration after 15 min (900 sec). Global option: $care_conf['opt_popular_in_category_expiration']</li>
+</ul>
 <h2>Care tag (class <a class="el" href="../../df/d8a/classtag__retrieve.html">tag_retrieve</a>)</h2>
-<p>Memcached is not used here.</p>
+<div class="fragment"><div class="line">$tag_topics_count_key = <span class="stringliteral">&#39;care_tag_topics_count_&#39;</span> . sha1($this-&gt;tag_url);</div>
+</div><!-- fragment --><p>It holds an integer:</p>
+<ul>
+<li>tag topics count</li>
+</ul>
+<div class="fragment"><div class="line">$popular_with_tag_key = <span class="stringliteral">&#39;care_popular_with_tag_&#39;</span> . sha1($tag_url);</div>
+</div><!-- fragment --><p>It holds an array with:</p>
+<ul>
+<li>popular topics with tag. Expiration after 15 min (900 sec). Global option: $care_conf['opt_popular_with_tag_expiration']</li>
+</ul>
 <h2>Care member (class <a class="el" href="../../d1/db6/classmember__retrieve.html">member_retrieve</a>)</h2>
 <div class="fragment"><div class="line">$member_key = <span class="stringliteral">&#39;care_member_&#39;</span> . sha1($member_url);</div>
 </div><!-- fragment --><p>It holds an array with:</p>
@@ -87,7 +106,7 @@
 <li>member recent topics (except news hellas and news world)</li>
 </ul>
 <div class="fragment"><div class="line">$member_topics_count_key = <span class="stringliteral">&#39;care_member_topics_count_&#39;</span> . $member_id;</div>
-</div><!-- fragment --><p>It holds:</p>
+</div><!-- fragment --><p>It holds an integer:</p>
 <ul>
 <li>member topics count (except news hellas and news world)</li>
 </ul>
@@ -99,12 +118,22 @@
 <div class="fragment"><div class="line">$member_bookmarks_count_key = <span class="stringliteral">&#39;care_member_bookmarks_count_&#39;</span> . $member_id;</div>
 </div><!-- fragment --><p>It holds an array with:</p>
 <ul>
-<li>member bookmarks count and member public bookmarks count </li>
+<li>member bookmarks count and member public bookmarks count</li>
+</ul>
+<div class="fragment"><div class="line">$member_comment_count_key = <span class="stringliteral">&#39;care_member_comments_count_&#39;</span> . $member_id;</div>
+</div><!-- fragment --><p>It holds an integer:</p>
+<ul>
+<li>member comments count</li>
+</ul>
+<div class="fragment"><div class="line">$popular_by_author_key = <span class="stringliteral">&#39;care_popular_by_author_&#39;</span> . $member_id;</div>
+</div><!-- fragment --><p>It holds an array with:</p>
+<ul>
+<li>popular topics by author. Expiration after 15 min (900 sec). Global option: $care_conf['opt_popular_by_author_expiration'] </li>
 </ul>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 8 2013 11:08:13 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 10 2013 15:37:03 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

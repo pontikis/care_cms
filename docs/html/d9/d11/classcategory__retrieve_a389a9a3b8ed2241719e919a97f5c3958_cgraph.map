@@ -1,0 +1,9 @@
+<map id="get_category_topics_count" name="get_category_topics_count">
+<area shape="rect" id="node2" href="$d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445" title="data_source\\pull_from\l_memcached" alt="" coords="441,5,591,46"/>
+<area shape="rect" id="node4" href="$d2/d6a/classcms__common.html#a7a4818f421f976f4d7259ce7f5767891" title="cms_common\\get_topics_list" alt="" coords="192,136,384,163"/>
+<area shape="rect" id="node8" href="$d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c" title="data_source\\push_to\l_memcached" alt="" coords="445,238,587,279"/>
+<area shape="rect" id="node3" href="$d5/d37/classdata__source.html#a66bded87950d727be350b8c6e86959d6" title="data_source\\mc_init" alt="" coords="648,129,787,156"/>
+<area shape="rect" id="node5" href="$dc/d42/classapp__common.html#afc5ff0eb710b16689e2faf08aadf2c89" title="app_common\\is_positive\l_integer" alt="" coords="433,70,599,111"/>
+<area shape="rect" id="node6" href="$d5/d37/classdata__source.html#aa06d3588126ba2b8eaaeaa518304406d" title="data_source\\db_connect" alt="" coords="434,136,598,163"/>
+<area shape="rect" id="node7" href="$dc/d42/classapp__common.html#af4a2ee0fcc1938603a0df8cb02e51fbd" title="app_common\\now" alt="" coords="452,187,580,213"/>
+</map>

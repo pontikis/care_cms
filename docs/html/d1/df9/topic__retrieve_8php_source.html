@@ -109,7 +109,7 @@
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            $this-&gt;<a class="code" href="../../d7/d90/classtopic__retrieve.html#adc2b25281927978c1a2be429d6982d71">increase_impressions</a>();</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="comment">// increase impressions in memcached</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($this-&gt;mc_settings, <span class="stringliteral">&#39;care_topic_&#39;</span> . $this-&gt;topic_id, $topic);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">push_to_memcached</a>($this-&gt;mc_settings, <span class="stringliteral">&#39;care_topic_&#39;</span> . $this-&gt;topic_id, $topic);</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            }</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
@@ -147,7 +147,7 @@
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">// pull from memcached</span></div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            $topic = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($this-&gt;mc_settings, $topic_key);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">if</span>($topic) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">if</span>($topic !== <span class="keyword">false</span>) {</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                $this-&gt;data_origin = <span class="stringliteral">&#39;memcached&#39;</span>;</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                <span class="keywordflow">return</span> $topic;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            }</div>
@@ -201,7 +201,7 @@
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="comment">// push to memcached</span></div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            $topic[<span class="stringliteral">&quot;date_cached&quot;</span>] = $this-&gt;<a class="code" href="../../dc/d42/classapp__common.html#af4a2ee0fcc1938603a0df8cb02e51fbd">now</a>(<span class="stringliteral">&#39;UTC&#39;</span>);</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($this-&gt;mc_settings, $topic_key, $topic);</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">push_to_memcached</a>($this-&gt;mc_settings, $topic_key, $topic);</div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        }</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <span class="keywordflow">return</span> $topic;</div>
@@ -224,7 +224,7 @@
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        <span class="comment">// pull from memcached</span></div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            $topic_author = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($this-&gt;mc_settings, $topic_author_key);</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <span class="keywordflow">if</span>($topic_author) {</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <span class="keywordflow">if</span>($topic_author !== <span class="keyword">false</span>) {</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                <span class="keywordflow">return</span> $topic_author;</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            }</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        }</div>
@@ -246,7 +246,7 @@
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        <span class="comment">// push to memcached</span></div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($this-&gt;mc_settings, $topic_author_key, $topic_author);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">push_to_memcached</a>($this-&gt;mc_settings, $topic_author_key, $topic_author);</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        }</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keywordflow">return</span> $topic_author;</div>
@@ -259,7 +259,7 @@
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;        <span class="comment">// pull from memcached</span></div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            $topic_category = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($this-&gt;mc_settings, $topic_category_key);</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="keywordflow">if</span>($topic_category) {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="keywordflow">if</span>($topic_category !== <span class="keyword">false</span>) {</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                <span class="keywordflow">return</span> $topic_category;</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            }</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        }</div>
@@ -281,7 +281,7 @@
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;</div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="comment">// push to memcached</span></div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($this-&gt;mc_settings, $topic_category_key, $topic_category);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">push_to_memcached</a>($this-&gt;mc_settings, $topic_category_key, $topic_category);</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        }</div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keywordflow">return</span> $topic_category;</div>
@@ -294,7 +294,7 @@
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        <span class="comment">// pull from memcached</span></div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            $topic_category = $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a8690626a974e5ed42fcd49273e39d445">pull_from_memcached</a>($this-&gt;mc_settings, $topic_category_key);</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            <span class="keywordflow">if</span>($topic_category) {</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            <span class="keywordflow">if</span>($topic_category !== <span class="keyword">false</span>) {</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                <span class="keywordflow">return</span> $topic_category;</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            }</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        }</div>
@@ -323,7 +323,7 @@
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        <span class="comment">// push to memcached</span></div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keywordflow">if</span>($this-&gt;opt_use_memcached) {</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#ae78ad5d131b4f089f034df0e13b94157">push_to_memcached</a>($this-&gt;mc_settings, $topic_category_key, $topic_category);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;            $this-&gt;<a class="code" href="../../d5/d37/classdata__source.html#a479501f8ecdb6227c2aeb7a03747520c">push_to_memcached</a>($this-&gt;mc_settings, $topic_category_key, $topic_category);</div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        }</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        <span class="keywordflow">return</span> $topic_category;</div>
@@ -337,7 +337,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 8 2013 11:08:13 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 10 2013 15:37:03 for Care CMS by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>
