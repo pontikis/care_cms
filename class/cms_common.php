@@ -43,6 +43,7 @@ class cms_common extends data_source {
 	 *     "offset" => int, (0 or an integer)
 	 *     "rows_to_return" => int, (0 or a possitive integer)
 	 *     "memcached_key" => "key" (or null)
+	 *     "expiration" => 0 (0 means never or number of seconds until expiration)
 	 *     "count_only" => bool (false/true)
 	 * );
 	 * </pre>
@@ -56,10 +57,15 @@ class cms_common extends data_source {
 			!is_null($a_criteria["memcached_key"]) &&
 			strlen($a_criteria["memcached_key"]) > 0;
 
+		$expiration = $use_memcached &&
+			array_key_exists('expiration', $a_criteria) &&
+			!is_null($a_criteria["expiration"]) &&
+			$this->is_positive_integer($a_criteria["expiration"]);
+
 		// pull from memcached
 		if($use_memcached) {
 			$a_topics_cached = $this->pull_from_memcached($a_mc, $a_criteria["memcached_key"]);
-			if($a_topics_cached) {
+			if($a_topics_cached !== false) {
 				return $a_topics_cached;
 			}
 		}
@@ -170,7 +176,11 @@ class cms_common extends data_source {
 
 		// push to memcached
 		if($use_memcached) {
-			$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
+			if($expiration) {
+				$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics, $a_criteria["expiration"]);
+			} else {
+				$this->push_to_memcached($a_mc, $a_criteria["memcached_key"], $a_topics);
+			}
 		}
 
 		if($count_only) {

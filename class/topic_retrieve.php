@@ -145,7 +145,7 @@ class topic_retrieve extends cms_common {
 		// pull from memcached
 		if($this->opt_use_memcached) {
 			$topic = $this->pull_from_memcached($this->mc_settings, $topic_key);
-			if($topic) {
+			if($topic !== false) {
 				$this->data_origin = 'memcached';
 				return $topic;
 			}
@@ -231,7 +231,7 @@ class topic_retrieve extends cms_common {
 		// pull from memcached
 		if($this->opt_use_memcached) {
 			$topic_author = $this->pull_from_memcached($this->mc_settings, $topic_author_key);
-			if($topic_author) {
+			if($topic_author !== false) {
 				return $topic_author;
 			}
 		}
@@ -272,7 +272,7 @@ class topic_retrieve extends cms_common {
 		// pull from memcached
 		if($this->opt_use_memcached) {
 			$topic_category = $this->pull_from_memcached($this->mc_settings, $topic_category_key);
-			if($topic_category) {
+			if($topic_category !== false) {
 				return $topic_category;
 			}
 		}
@@ -313,7 +313,7 @@ class topic_retrieve extends cms_common {
 		// pull from memcached
 		if($this->opt_use_memcached) {
 			$topic_category = $this->pull_from_memcached($this->mc_settings, $topic_category_key);
-			if($topic_category) {
+			if($topic_category !== false) {
 				return $topic_category;
 			}
 		}

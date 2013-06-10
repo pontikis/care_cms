@@ -19,6 +19,9 @@ class category_retrieve extends cms_common {
 	/** @var bool Option opt_show_popular_topics (true) or not (false) */
 	private $opt_show_popular_topics;
 
+	/** @var int Option opt_popular_in_category_expiration (0 never or number of seconds) */
+	private $opt_popular_in_category_expiration;
+
 	/** @var string Data origin ('undefined', 'memcached', 'database') */
 	private $data_origin;
 
@@ -45,6 +48,7 @@ class category_retrieve extends cms_common {
 		$this->opt_use_memcached = $a_mc["use_memcached"];
 		$this->opt_show_popular_topics = $care_conf['opt_show_popular_topics_per_category'];
 		$this->opt_show_relative_categories = $care_conf['opt_show_relative_categories'];
+		$this->opt_popular_in_category_expiration = $care_conf['opt_popular_in_category_expiration'];
 		$this->data_origin = 'undefined';
 	}
 
@@ -76,6 +80,15 @@ class category_retrieve extends cms_common {
 	}
 
 	/**
+	 * Set opt_popular_in_category_expiration
+	 *
+	 * @param int number of seconds until expiration (0  means never)
+	 */
+	public function set_opt_popular_in_category_expiration($exp) {
+		$this->opt_popular_in_category_expiration = $exp;
+	}
+
+	/**
 	 * Get data origin ('undefined', 'memcached', 'database')
 	 *
 	 * @return string data origin
@@ -95,7 +108,7 @@ class category_retrieve extends cms_common {
 		if($this->opt_use_memcached) {
 			$category_key = 'care_category_' . sha1($this->category_url);
 			$category = $this->pull_from_memcached($this->mc_settings, $category_key);
-			if($category) {
+			if($category !== false) {
 				$this->data_origin = 'memcached';
 			}
 		}
@@ -143,15 +156,21 @@ class category_retrieve extends cms_common {
 			}
 		}
 
-		// get category topics (page topics - always from database) ------------
-		$category["page_topics"] = array();
+
+		// get category topics count -------------------------------------------
 		if($category["list_mode"] == 1) {
-			$res = $this->get_category_page_topics($category);
-			$category["total_topics"] = $res["total_topics"];
-			$category["page_topics"] = $res["page_topics"];
+			$category["total_topics"] = $this->get_category_topics_count($category);
 		}
 
-		// get category popular topics (always from database) ------------------
+		// get category page topics (always from database) ---------------------
+		$category["page_topics"] = array();
+		if($category["list_mode"] == 1) {
+			if($category["total_topics"] > 0) {
+				$category["page_topics"] = $this->get_category_page_topics($category);
+			}
+		}
+
+		// get category popular topics (use memcached with expiration) ---------
 		$category["a_popular_topics"] = array();
 		if($this->opt_show_popular_topics) {
 			if($category['list_mode'] != 3) {
@@ -273,6 +292,46 @@ class category_retrieve extends cms_common {
 	}
 
 	/**
+	 * Get category topics count (only for list_mode = 1)
+	 *
+	 * @param array $category category properties
+	 * @return int category topics count
+	 */
+	private function get_category_topics_count($category) {
+
+		$category_topics_count_key = 'care_category_topics_count_' . $category['id'];
+
+		// pull from memcached
+		if($this->opt_use_memcached) {
+			$total_topics = $this->pull_from_memcached($this->mc_settings, $category_topics_count_key);
+			if($total_topics !== false) {
+				return $total_topics;
+			}
+		}
+
+		$a_category_topics_count_criteria = array(
+			"publish_status" => TOPIC_STATUS_PUBLISHED,
+			"with_content_type" => ($category["ctg_type"] == 1 ? $category["id"] : null),
+			"with_topic_type" => ($category["ctg_type"] == 2 ? $category["id"] : null),
+			"topic_type_column" => (in_array($category["id"], array(1, 4)) ? 'topic_top_type_id' : 'topic_type_id'),
+			"count_only" => true
+		);
+		if($this->opt_use_memcached) {
+			$a_category_topics_count_criteria['memcached_key'] = $category_topics_count_key;
+			$total_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_topics_count_criteria);
+		} else {
+			$total_topics = $this->get_topics_list($this->db_settings, null, $a_category_topics_count_criteria);
+		}
+
+		// push to memcached
+		if($this->opt_use_memcached) {
+			$this->push_to_memcached($this->mc_settings, $category_topics_count_key, $total_topics);
+		}
+
+		return $total_topics;
+	}
+
+	/**
 	 * Get category page topics (always from database)
 	 *
 	 * @param array $category category properties
@@ -290,18 +349,9 @@ class category_retrieve extends cms_common {
 			"sort_order" => "DESC",
 			"offset" => $this->offset,
 			"rows_to_return" => $this->max_topics_per_page,
-			"count_only" => true
+			"count_only" => false
 		);
-		$total_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics_criteria);
-
-		$page_topics = array();
-		if($total_topics > 0) {
-			$a_category_page_topics_criteria["count_only"] = false;
-			$page_topics = $this->get_topics_list($this->db_settings, $this->mc_settings, $a_category_page_topics_criteria);
-		}
-
-		return array("total_topics" => $total_topics, "page_topics" => $page_topics);
-
+		return $this->get_topics_list($this->db_settings, null, $a_category_page_topics_criteria);
 	}
 
 	/**
@@ -394,12 +444,14 @@ class category_retrieve extends cms_common {
 	}
 
 	/**
-	 * Get gategory popular topics (always from database)
+	 * Get category popular topics (use memcached with expiration)
 	 *
 	 * @param array $category category properties
 	 * @return array popular topics (title, url, impressions, date published)
 	 */
 	public function get_category_popular_topics($category) {
+
+		$popular_in_category_key = 'care_popular_in_category_' . sha1($this->category_url);
 
 		$a_category_popular_topics_criteria = array(
 			"extra_columns_topics" => array("impressions"),
@@ -411,6 +463,8 @@ class category_retrieve extends cms_common {
 			"sort_order" => "DESC",
 			"offset" => 0,
 			"rows_to_return" => $this->max_popular,
+			"memcached_key" => $popular_in_category_key,
+			"expiration" => $this->opt_popular_in_category_expiration,
 			"count_only" => false
 		);
 

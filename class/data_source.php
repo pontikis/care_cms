@@ -140,11 +140,12 @@ class data_source extends app_common {
 	 * @param array $a_mc memcached settings
 	 * @param string $key the key to search
 	 * @param mixed $val the value of the key
+	 * @param int $exp seconds to expire
 	 */
-	public function push_to_memcached($a_mc, $key, $val) {
+	public function push_to_memcached($a_mc, $key, $val, $exp = 0) {
 		$mc = $this->mc_init($a_mc);
 		if(!is_null($mc)) {
-			$mc->set($key, $val);
+			$mc->set($key, $val, $exp);
 		}
 	}
 
